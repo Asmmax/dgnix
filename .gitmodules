@@ -1,3 +1,9 @@
 [submodule "deps/imgui/imgui"]
 	path = deps/imgui/imgui
 	url = git@github.com:ocornut/imgui.git
+[submodule "deps/glm/glm"]
+	path = deps/glm/glm
+	url = git@github.com:g-truc/glm.git
+[submodule "deps/infrastruct"]
+	path = deps/infrastruct
+	url = git@github.com:Asmmax/infrastruct.git
