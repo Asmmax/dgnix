@@ -20,13 +20,34 @@ Window::Window(IWindowImpl* impl):
 
 	if (auto inputHandler = _impl->getInputHandler()) {
 		inputHandler->setMouseRightButtonDownCallback([this](double x, double y) {
-			mouseButtonCallback(x, y);
+			if (_mouseRightButtonDownCallback) {
+				_mouseRightButtonDownCallback(x, y);
+			}
+			});
+		inputHandler->setMouseRightButtonUpCallback([this](double x, double y) {
+			if (_mouseRightButtonUpCallback) {
+				_mouseRightButtonUpCallback(x, y);
+			}
+			});
+		inputHandler->setMouseLeftButtonDownCallback([this](double x, double y) {
+			if (_mouseLeftButtonDownCallback) {
+				_mouseLeftButtonDownCallback(x, y);
+			}
+			});
+		inputHandler->setMouseLeftButtonUpCallback([this](double x, double y) {
+			if (_mouseLeftButtonUpCallback) {
+				_mouseLeftButtonUpCallback(x, y);
+			}
 			});
 		inputHandler->setMouseMoveCallback([this](double x, double y) {
-			mousePositionCallback(x, y);
+			if (_mouseMoveCallback) {
+				_mouseMoveCallback(x, y);
+			}
 			});
 		inputHandler->setMouseScrollCallback([this](double yOffset) {
-			mouseScrollCallback(yOffset);
+			if (_mouseScrollCallback) {
+				_mouseScrollCallback(yOffset);
+			}
 			});
 	}
 }
@@ -51,6 +72,9 @@ bool Window::isDone()
 
 void Window::handle()
 {
+	if (_preHandleCallback) {
+		_preHandleCallback();
+	}
 	_impl->handle();
 }
 
@@ -102,7 +126,7 @@ void Window::beginRender()
 	graphicsContext->clearBuffer(_background);
 }
 
-void Window::render(Model* model)
+void Window::render(const Model* model)
 {
 	auto graphicsContext = _impl->getGraphicsContext();
 	if (!graphicsContext) {
@@ -151,38 +175,4 @@ void Window::endRender()
 		return;
 	}
 	graphicsContext->swapBuffers();
-}
-
-void Window::mouseButtonCallback(double posX, double posY)
-{
-	if (!_resetMousePosCallback) {
-		return;
-	}
-
-	_resetMousePosCallback(posX, posY);
-}
-
-void Window::mousePositionCallback(double x, double y)
-{
-	if (!_moveMouseCallback) {
-		return;
-	}
-
-	auto inputHandler = _impl->getInputHandler();
-	if (!inputHandler) {
-		return;
-	}
-
-	if (inputHandler->isRightMousePressed()) {
-		_moveMouseCallback(x, y);
-	}
-}
-
-void Window::mouseScrollCallback(double yOffset)
-{
-	if (!_scrollMouseCallback) {
-		return;
-	}
-
-	_scrollMouseCallback(yOffset);
 }

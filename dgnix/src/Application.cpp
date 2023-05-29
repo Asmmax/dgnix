@@ -98,4 +98,12 @@ Window* Application::getWindow(int width, int height, const std::string& title)
     return _window.get();
 }
 
+double Application::GetTime()
+{
+    if (!_isValid || !_impl)
+        return 0.0;
+
+    return _impl->getTime();
+}
+
 template void Application::bindImpl<GLFWApplicationImpl>();

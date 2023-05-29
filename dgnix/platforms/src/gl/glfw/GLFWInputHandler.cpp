@@ -3,9 +3,7 @@
 #include "GLFW/glfw3.h"
 
 GLFWInputHandler::GLFWInputHandler(GLFWwindow* window):
-	_window(window),
-	_isRightMousePressed(false),
-	_isLeftMousePressed(false)
+	_window(window)
 {
 }
 
@@ -25,13 +23,11 @@ void GLFWInputHandler::mouseButtonCallback(GLFWwindow* window, int button, int a
 		return;
 	}
 
-	if (button == GLFW_MOUSE_BUTTON_RIGHT) {
+	switch (button) 
+	{
+	case GLFW_MOUSE_BUTTON_RIGHT:
 		if (action == GLFW_PRESS) {
-			glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
-			if (glfwRawMouseMotionSupported())
-				glfwSetInputMode(window, GLFW_RAW_MOUSE_MOTION, GLFW_TRUE);
-
-			handler->_isRightMousePressed = true;
+			captureMouse(window);
 
 			double posX = 0, posY = 0;
 			glfwGetCursorPos(window, &posX, &posY);
@@ -41,11 +37,7 @@ void GLFWInputHandler::mouseButtonCallback(GLFWwindow* window, int button, int a
 		}
 		else if (action == GLFW_RELEASE)
 		{
-			glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
-			if (glfwRawMouseMotionSupported())
-				glfwSetInputMode(window, GLFW_RAW_MOUSE_MOTION, GLFW_FALSE);
-
-			handler->_isRightMousePressed = false;
+			uncaptureMouse(window);
 
 			double posX = 0, posY = 0;
 			glfwGetCursorPos(window, &posX, &posY);
@@ -53,6 +45,30 @@ void GLFWInputHandler::mouseButtonCallback(GLFWwindow* window, int button, int a
 				handler->_mouseRightButtonUpCallback(posX, posY);
 			}
 		}
+		break;
+	case GLFW_MOUSE_BUTTON_LEFT:
+		if (action == GLFW_PRESS) {
+			captureMouse(window);
+
+			double posX = 0, posY = 0;
+			glfwGetCursorPos(window, &posX, &posY);
+			if (handler->_mouseLeftButtonDownCallback) {
+				handler->_mouseLeftButtonDownCallback(posX, posY);
+			}
+		}
+		else if (action == GLFW_RELEASE)
+		{
+			uncaptureMouse(window);
+
+			double posX = 0, posY = 0;
+			glfwGetCursorPos(window, &posX, &posY);
+			if (handler->_mouseLeftButtonUpCallback) {
+				handler->_mouseLeftButtonUpCallback(posX, posY);
+			}
+		}
+		break;
+	default:
+		break;
 	}
 }
 
@@ -70,4 +86,18 @@ void GLFWInputHandler::mouseScrollCallback(GLFWwindow* window, double xOffset, d
 	if (handler->_mouseScrollCallback) {
 		handler->_mouseScrollCallback(yOffset);
 	}
+}
+
+void GLFWInputHandler::captureMouse(GLFWwindow* window)
+{
+	glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+	if (glfwRawMouseMotionSupported())
+		glfwSetInputMode(window, GLFW_RAW_MOUSE_MOTION, GLFW_TRUE);
+}
+
+void GLFWInputHandler::uncaptureMouse(GLFWwindow* window)
+{
+	glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+	if (glfwRawMouseMotionSupported())
+		glfwSetInputMode(window, GLFW_RAW_MOUSE_MOTION, GLFW_FALSE);
 }

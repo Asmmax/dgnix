@@ -14,9 +14,6 @@ private:
 	MouseMoveCallback _mouseMoveCallback;
 	MouseScrollCallback _mouseScrollCallback;
 
-	bool _isRightMousePressed;
-	bool _isLeftMousePressed;
-
 public:
 	GLFWInputHandler(GLFWwindow* window);
 
@@ -28,11 +25,11 @@ public:
 	void setMouseMoveCallback(const MouseMoveCallback& callback) override { _mouseMoveCallback = callback; }
 	void setMouseScrollCallback(const MouseScrollCallback& callback) override { _mouseScrollCallback = callback; }
 
-	bool isRightMousePressed() override { return _isRightMousePressed; }
-	bool isLeftMousePressed() override { return _isLeftMousePressed; }
-
 private:
 	static void mouseButtonCallback(GLFWwindow* window, int button, int action, int mode);
 	static void mousePositionCallback(GLFWwindow* window, double x, double y);
 	static void mouseScrollCallback(GLFWwindow* window, double xOffset, double yOffset);
+
+	static void captureMouse(GLFWwindow* window);
+	static void uncaptureMouse(GLFWwindow* window);
 };

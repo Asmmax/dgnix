@@ -14,17 +14,24 @@ class Window
 {
 	friend class Application;
 
-private:
-	using MousePosCallback = std::function<void(double, double)>;
+public:
+	using VoidCallback = std::function<void()>;
+	using MouseButtonCallback = std::function<void(double, double)>;
+	using MouseMoveCallback = std::function<void(double, double)>;
 	using MouseScrollCallback = std::function<void(double)>;
 
+private:
 	IWindowImpl* _impl;
 	std::vector<View*> _views;
 	std::unique_ptr<Loader> _loader;
 
-	MousePosCallback _resetMousePosCallback;
-	MousePosCallback _moveMouseCallback;
-	MouseScrollCallback _scrollMouseCallback;
+	MouseButtonCallback _mouseRightButtonDownCallback;
+	MouseButtonCallback _mouseRightButtonUpCallback;
+	MouseButtonCallback _mouseLeftButtonDownCallback;
+	MouseButtonCallback _mouseLeftButtonUpCallback;
+	MouseMoveCallback _mouseMoveCallback;
+	MouseScrollCallback _mouseScrollCallback;
+	VoidCallback _preHandleCallback;
 
 	glm::vec3 _background;
 	glm::mat4 _viewMatrix;
@@ -39,7 +46,7 @@ public:
 	Loader* getLoader();
 
 	void beginRender();
-	void render(Model* model);
+	void render(const Model* model);
 	void setupImgui();
 	void renderImgui();
 	void endRender();
@@ -50,14 +57,14 @@ public:
 	void setBackground(const glm::vec3& color) { _background = color; }
 	const glm::vec3& getBackground() const { return _background; }
 
-	void setResetMousePosCallback(const MousePosCallback& callback) { _resetMousePosCallback = callback; }
-	void setMoveMouseCallback(const MousePosCallback& callback) { _moveMouseCallback = callback; }
-	void setScrollMouseCallback(const MouseScrollCallback& callback) { _scrollMouseCallback = callback; }
+	void setPreHandleCallback(const VoidCallback& callback) { _preHandleCallback = callback; }
+	void setMouseRightButtonDownCallback(const MouseButtonCallback& callback) { _mouseRightButtonDownCallback = callback; }
+	void setMouseRightButtonUpCallback(const MouseButtonCallback& callback) { _mouseRightButtonUpCallback = callback; }
+	void setMouseLeftButtonDownCallback(const MouseButtonCallback& callback) { _mouseLeftButtonDownCallback = callback; }
+	void setMouseLeftButtonUpCallback(const MouseButtonCallback& callback) { _mouseLeftButtonUpCallback = callback; }
+	void setMouseMoveCallback(const MouseMoveCallback& callback) { _mouseMoveCallback = callback; }
+	void setMouseScrollCallback(const MouseScrollCallback& callback) { _mouseScrollCallback = callback; }
 
 private:
 	Window(IWindowImpl* impl);
-
-	void mouseButtonCallback(double x, double y);
-	void mousePositionCallback(double x, double y);
-	void mouseScrollCallback(double yOffset);
 };

@@ -37,3 +37,8 @@ IWindowImpl* GLFWApplicationImpl::createWindow(int width, int height, const std:
 
 	return new GLFWWindowImpl(window);
 }
+
+double GLFWApplicationImpl::getTime()
+{
+	return glfwGetTime();
+}

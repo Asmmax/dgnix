@@ -34,8 +34,8 @@ public:
 
 	bool has(const StringId& name) const;
 
-	void apply(Shader& shader);
-	void apply(DrawState& otherState);
+	void apply(Shader& shader) const;
+	void apply(DrawState& otherState) const;
 
 private:
 	template<typename Type, std::size_t... Is>
@@ -109,23 +109,23 @@ private:
 
 
 	template<std::size_t... Is>
-	void apply(Shader& shader, std::tuple<UnorderedMap<StringId, Types>...>& tuple, std::index_sequence<Is...>);
+	void apply(Shader& shader, const std::tuple<UnorderedMap<StringId, Types>...>& tuple, std::index_sequence<Is...>) const;
 
 	template<typename CurrentType, typename... Remains>
-	void apply(Shader& shader, UnorderedMap<StringId, CurrentType>& currentMap, UnorderedMap<StringId, Remains>&... remains);
+	void apply(Shader& shader, const UnorderedMap<StringId, CurrentType>& currentMap, const UnorderedMap<StringId, Remains>&... remains) const;
 
 	template<typename Type>
-	void apply(Shader& shader, UnorderedMap<StringId, Type>& map);
+	void apply(Shader& shader, const UnorderedMap<StringId, Type>& map) const;
 
 
 	template<std::size_t... Is>
-	void apply(DrawState& otherState, std::tuple<UnorderedMap<StringId, Types>...>& tuple, std::index_sequence<Is...>);
+	void apply(DrawState& otherState, const std::tuple<UnorderedMap<StringId, Types>...>& tuple, std::index_sequence<Is...>) const;
 
 	template<typename CurrentType, typename... Remains>
-	void apply(DrawState& otherState, UnorderedMap<StringId, CurrentType>& currentMap, UnorderedMap<StringId, Remains>&... remains);
+	void apply(DrawState& otherState, const UnorderedMap<StringId, CurrentType>& currentMap, const UnorderedMap<StringId, Remains>&... remains) const;
 
 	template<typename Type>
-	void apply(DrawState& otherState, UnorderedMap<StringId, Type>& map);
+	void apply(DrawState& otherState, const UnorderedMap<StringId, Type>& map) const;
 };
 
 

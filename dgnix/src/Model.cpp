@@ -22,7 +22,7 @@ Model::~Model()
 	}
 }
 
-void Model::predraw(DrawStatePoolDef& statePool, const glm::mat4& viewMatrix, const glm::mat4& projMatrix)
+void Model::predraw(DrawStatePoolDef& statePool, const glm::mat4& viewMatrix, const glm::mat4& projMatrix) const
 {
 	glm::mat4 viewProjMat = projMatrix * viewMatrix;
 
@@ -41,7 +41,7 @@ void Model::predraw(DrawStatePoolDef& statePool, const glm::mat4& viewMatrix, co
 	_state.apply(currentState);
 }
 
-void Model::draw(DrawStatePoolDef& statePool)
+void Model::draw(DrawStatePoolDef& statePool) const
 {
 	for (auto& batch : _batches) {
 		statePool.push();

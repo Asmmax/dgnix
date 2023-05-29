@@ -39,7 +39,7 @@ void View::init(IGraphicsContext* context)
 	_impl->resizeBuffer(_width, _height);
 }
 
-void View::render(Model* model)
+void View::render(const Model* model)
 {
 	if (!_context) {
 		return;

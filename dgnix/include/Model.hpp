@@ -22,8 +22,8 @@ public:
 	Model(size_t poolSize = 100);
 	~Model();
 
-	void predraw(DrawStatePoolDef& statePool, const glm::mat4& viewMatrix, const glm::mat4& projMatrix);
-	void draw(DrawStatePoolDef& statePool);
+	void predraw(DrawStatePoolDef& statePool, const glm::mat4& viewMatrix, const glm::mat4& projMatrix) const;
+	void draw(DrawStatePoolDef& statePool) const;
 
 	DrawStateDef& getState() { return _state; }
 	const DrawStateDef& getState() const { return _state; }

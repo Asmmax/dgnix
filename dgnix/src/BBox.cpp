@@ -45,6 +45,10 @@ BBox BBox::project(const glm::mat4& projMatrix) const
 
 	BBox projectedBounds;
 	for (auto& projectedVertex : projectedVertices) {
+		if (projectedVertex.w < 0.0f) {
+			projectedBounds.addPoint(0.0f, 0.0f, 0.0f);
+			continue;
+		}
 		projectedBounds.addPoint(projectedVertex.x / projectedVertex.w, projectedVertex.y / projectedVertex.w, projectedVertex.z / projectedVertex.w);
 	}
 

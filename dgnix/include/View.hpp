@@ -28,7 +28,7 @@ public:
 	~View();
 
 	void init(IGraphicsContext* context);
-	void render(Model* model);
+	void render(const Model* model);
 	void setSize(int width, int height);
 
 	void setMatrix(const glm::mat4& matrix) { _matrix = matrix; }

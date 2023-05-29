@@ -231,7 +231,7 @@ bool DrawState<Types...>::has(const StringId& name, const UnorderedMap<StringId,
 
 
 template<typename... Types>
-void DrawState<Types...>::apply(Shader& shader)
+void DrawState<Types...>::apply(Shader& shader) const
 {
 	if (_parentState) {
 		_parentState->apply(shader);
@@ -241,14 +241,14 @@ void DrawState<Types...>::apply(Shader& shader)
 
 template<typename... Types>
 template<std::size_t... Is>
-void DrawState<Types...>::apply(Shader& shader, std::tuple<UnorderedMap<StringId, Types>...>& tuple, std::index_sequence<Is...>)
+void DrawState<Types...>::apply(Shader& shader, const std::tuple<UnorderedMap<StringId, Types>...>& tuple, std::index_sequence<Is...>) const
 {
 	apply(shader, std::get<Is>(tuple)...);
 }
 
 template<typename... Types>
 template<typename CurrentType, typename... Remains>
-void DrawState<Types...>::apply(Shader& shader, UnorderedMap<StringId, CurrentType>& currentMap, UnorderedMap<StringId, Remains>&... remains)
+void DrawState<Types...>::apply(Shader& shader, const UnorderedMap<StringId, CurrentType>& currentMap, const UnorderedMap<StringId, Remains>&... remains) const
 {
 	apply(shader, currentMap);
 	apply(shader, remains...);
@@ -256,7 +256,7 @@ void DrawState<Types...>::apply(Shader& shader, UnorderedMap<StringId, CurrentTy
 
 template<typename... Types>
 template<typename Type>
-void DrawState<Types...>::apply(Shader& shader, UnorderedMap<StringId, Type>& map)
+void DrawState<Types...>::apply(Shader& shader, const UnorderedMap<StringId, Type>& map) const
 {
 	for (size_t i = 0; i < map.size(); i++) {
 		auto location = shader.getLocation(map.keys()[i]);
@@ -268,7 +268,7 @@ void DrawState<Types...>::apply(Shader& shader, UnorderedMap<StringId, Type>& ma
 
 
 template<typename... Types>
-void DrawState<Types...>::apply(DrawState& otherState)
+void DrawState<Types...>::apply(DrawState& otherState) const
 {
 	if (_parentState) {
 		_parentState->apply(otherState);
@@ -278,14 +278,14 @@ void DrawState<Types...>::apply(DrawState& otherState)
 
 template<typename... Types>
 template<std::size_t... Is>
-void DrawState<Types...>::apply(DrawState& otherState, std::tuple<UnorderedMap<StringId, Types>...>& tuple, std::index_sequence<Is...>)
+void DrawState<Types...>::apply(DrawState& otherState, const std::tuple<UnorderedMap<StringId, Types>...>& tuple, std::index_sequence<Is...>) const
 {
 	apply(otherState, std::get<Is>(tuple)...);
 }
 
 template<typename... Types>
 template<typename CurrentType, typename... Remains>
-void DrawState<Types...>::apply(DrawState& otherState, UnorderedMap<StringId, CurrentType>& currentMap, UnorderedMap<StringId, Remains>&... remains)
+void DrawState<Types...>::apply(DrawState& otherState, const UnorderedMap<StringId, CurrentType>& currentMap, const UnorderedMap<StringId, Remains>&... remains) const
 {
 	apply(otherState, currentMap);
 	apply(otherState, remains...);
@@ -293,7 +293,7 @@ void DrawState<Types...>::apply(DrawState& otherState, UnorderedMap<StringId, Cu
 
 template<typename... Types>
 template<typename Type>
-void DrawState<Types...>::apply(DrawState& otherState, UnorderedMap<StringId, Type>& map)
+void DrawState<Types...>::apply(DrawState& otherState, const UnorderedMap<StringId, Type>& map) const
 {
 	for (size_t i = 0; i < map.size(); i++) {
 		otherState.add(map.keys()[i], map.values()[i]);

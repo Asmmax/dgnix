@@ -17,7 +17,4 @@ public:
 	virtual void setMouseLeftButtonUpCallback(const MouseButtonCallback& callback) = 0;
 	virtual void setMouseMoveCallback(const MouseMoveCallback& callback) = 0;
 	virtual void setMouseScrollCallback(const MouseScrollCallback& callback) = 0;
-
-	virtual bool isRightMousePressed() = 0;
-	virtual bool isLeftMousePressed() = 0;
 };
