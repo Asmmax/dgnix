@@ -16,6 +16,20 @@ void GLFWInputHandler::init()
 	glfwSetScrollCallback(_window, mouseScrollCallback);
 }
 
+void GLFWInputHandler::captureMouse()
+{
+	glfwSetInputMode(_window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+	if (glfwRawMouseMotionSupported())
+		glfwSetInputMode(_window, GLFW_RAW_MOUSE_MOTION, GLFW_TRUE);
+}
+
+void GLFWInputHandler::uncaptureMouse()
+{
+	glfwSetInputMode(_window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+	if (glfwRawMouseMotionSupported())
+		glfwSetInputMode(_window, GLFW_RAW_MOUSE_MOTION, GLFW_FALSE);
+}
+
 void GLFWInputHandler::mouseButtonCallback(GLFWwindow* window, int button, int action, int mode)
 {
 	auto* handler = static_cast<GLFWInputHandler*>(glfwGetWindowUserPointer(window));
@@ -23,52 +37,35 @@ void GLFWInputHandler::mouseButtonCallback(GLFWwindow* window, int button, int a
 		return;
 	}
 
-	switch (button) 
-	{
-	case GLFW_MOUSE_BUTTON_RIGHT:
-		if (action == GLFW_PRESS) {
-			captureMouse(window);
+	static std::vector<InputEvents::MouseKey> mouseKeyMap = {
+		InputEvents::MouseKey::LEFT_BUTTON,
+		InputEvents::MouseKey::RIGHT_BUTTON,
+		InputEvents::MouseKey::MIDDLE_BUTTON,
+		InputEvents::MouseKey::UNDEFINED,
+		InputEvents::MouseKey::UNDEFINED,
+		InputEvents::MouseKey::UNDEFINED,
+		InputEvents::MouseKey::UNDEFINED,
+		InputEvents::MouseKey::UNDEFINED
+	};
 
-			double posX = 0, posY = 0;
-			glfwGetCursorPos(window, &posX, &posY);
-			if (handler->_mouseRightButtonDownCallback) {
-				handler->_mouseRightButtonDownCallback(posX, posY);
-			}
-		}
-		else if (action == GLFW_RELEASE)
-		{
-			uncaptureMouse(window);
+	const InputEvents::MouseKey key = mouseKeyMap[button];
 
-			double posX = 0, posY = 0;
-			glfwGetCursorPos(window, &posX, &posY);
-			if (handler->_mouseRightButtonUpCallback) {
-				handler->_mouseRightButtonUpCallback(posX, posY);
-			}
-		}
-		break;
-	case GLFW_MOUSE_BUTTON_LEFT:
-		if (action == GLFW_PRESS) {
-			captureMouse(window);
+	static std::vector<InputEvents::KeyState> mouseKeyState = {
+		InputEvents::KeyState::KEY_UP,
+		InputEvents::KeyState::KEY_DOWN,
+		InputEvents::KeyState::UNDEFINED
+	};
 
-			double posX = 0, posY = 0;
-			glfwGetCursorPos(window, &posX, &posY);
-			if (handler->_mouseLeftButtonDownCallback) {
-				handler->_mouseLeftButtonDownCallback(posX, posY);
-			}
-		}
-		else if (action == GLFW_RELEASE)
-		{
-			uncaptureMouse(window);
+	const InputEvents::KeyState state = mouseKeyState[action];
 
-			double posX = 0, posY = 0;
-			glfwGetCursorPos(window, &posX, &posY);
-			if (handler->_mouseLeftButtonUpCallback) {
-				handler->_mouseLeftButtonUpCallback(posX, posY);
-			}
-		}
-		break;
-	default:
-		break;
+	if (handler->_mouseButtonCallback) {
+		handler->_mouseButtonCallback(key, state);
+	}
+
+	double posX = 0, posY = 0;
+	glfwGetCursorPos(window, &posX, &posY);
+	if (handler->_mouseButtonWithMoveCallback) {
+		handler->_mouseButtonWithMoveCallback(posX, posY, key, state);
 	}
 }
 
@@ -86,18 +83,4 @@ void GLFWInputHandler::mouseScrollCallback(GLFWwindow* window, double xOffset, d
 	if (handler->_mouseScrollCallback) {
 		handler->_mouseScrollCallback(yOffset);
 	}
-}
-
-void GLFWInputHandler::captureMouse(GLFWwindow* window)
-{
-	glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
-	if (glfwRawMouseMotionSupported())
-		glfwSetInputMode(window, GLFW_RAW_MOUSE_MOTION, GLFW_TRUE);
-}
-
-void GLFWInputHandler::uncaptureMouse(GLFWwindow* window)
-{
-	glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
-	if (glfwRawMouseMotionSupported())
-		glfwSetInputMode(window, GLFW_RAW_MOUSE_MOTION, GLFW_FALSE);
 }

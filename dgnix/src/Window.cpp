@@ -1,3 +1,5 @@
+#include "..\include\Window.hpp"
+#include "..\include\Window.hpp"
 #include "Window.hpp"
 #include "IWindowImpl.hpp"
 #include "IInputHandler.hpp"
@@ -10,6 +12,22 @@
 #include <glm/glm.hpp>
 #include <glm/ext/matrix_clip_space.hpp>
 
+void Window::captureMouse()
+{
+	auto inputHandler = _impl->getInputHandler();
+	if (inputHandler) {
+		inputHandler->captureMouse();
+	}
+}
+
+void Window::uncaptureMouse()
+{
+	auto inputHandler = _impl->getInputHandler();
+	if (inputHandler) {
+		inputHandler->uncaptureMouse();
+	}
+}
+
 Window::Window(IWindowImpl* impl):
 	_impl(impl),
 	_background(0.0f, 0.0f, 0.0f),
@@ -19,24 +37,14 @@ Window::Window(IWindowImpl* impl):
 	_impl->init();
 
 	if (auto inputHandler = _impl->getInputHandler()) {
-		inputHandler->setMouseRightButtonDownCallback([this](double x, double y) {
-			if (_mouseRightButtonDownCallback) {
-				_mouseRightButtonDownCallback(x, y);
+		inputHandler->setMouseButtonCallback([this](InputEvents::MouseKey key, InputEvents::KeyState state) {
+			if (_mouseButtonCallback) {
+				_mouseButtonCallback(key, state);
 			}
 			});
-		inputHandler->setMouseRightButtonUpCallback([this](double x, double y) {
-			if (_mouseRightButtonUpCallback) {
-				_mouseRightButtonUpCallback(x, y);
-			}
-			});
-		inputHandler->setMouseLeftButtonDownCallback([this](double x, double y) {
-			if (_mouseLeftButtonDownCallback) {
-				_mouseLeftButtonDownCallback(x, y);
-			}
-			});
-		inputHandler->setMouseLeftButtonUpCallback([this](double x, double y) {
-			if (_mouseLeftButtonUpCallback) {
-				_mouseLeftButtonUpCallback(x, y);
+		inputHandler->setMouseButtonWithMoveCallback([this](double x, double y, InputEvents::MouseKey key, InputEvents::KeyState state) {
+			if (_mouseButtonWithMoveCallback) {
+				_mouseButtonWithMoveCallback(x, y, key, state);
 			}
 			});
 		inputHandler->setMouseMoveCallback([this](double x, double y) {

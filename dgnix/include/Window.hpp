@@ -1,6 +1,7 @@
 #pragma once
 #include "DrawState.hpp"
 #include "Loader.hpp"
+#include "InputEvents.hpp"
 #include <memory>
 #include <vector>
 #include <functional>
@@ -16,21 +17,16 @@ class Window
 
 public:
 	using VoidCallback = std::function<void()>;
-	using MouseButtonCallback = std::function<void(double, double)>;
-	using MouseMoveCallback = std::function<void(double, double)>;
-	using MouseScrollCallback = std::function<void(double)>;
 
 private:
 	IWindowImpl* _impl;
 	std::vector<View*> _views;
 	std::unique_ptr<Loader> _loader;
 
-	MouseButtonCallback _mouseRightButtonDownCallback;
-	MouseButtonCallback _mouseRightButtonUpCallback;
-	MouseButtonCallback _mouseLeftButtonDownCallback;
-	MouseButtonCallback _mouseLeftButtonUpCallback;
-	MouseMoveCallback _mouseMoveCallback;
-	MouseScrollCallback _mouseScrollCallback;
+	InputEvents::MouseButtonCallback _mouseButtonCallback;
+	InputEvents::MouseButtonWithMoveCallback _mouseButtonWithMoveCallback;
+	InputEvents::MouseMoveCallback _mouseMoveCallback;
+	InputEvents::MouseScrollCallback _mouseScrollCallback;
 	VoidCallback _preHandleCallback;
 
 	glm::vec3 _background;
@@ -58,12 +54,12 @@ public:
 	const glm::vec3& getBackground() const { return _background; }
 
 	void setPreHandleCallback(const VoidCallback& callback) { _preHandleCallback = callback; }
-	void setMouseRightButtonDownCallback(const MouseButtonCallback& callback) { _mouseRightButtonDownCallback = callback; }
-	void setMouseRightButtonUpCallback(const MouseButtonCallback& callback) { _mouseRightButtonUpCallback = callback; }
-	void setMouseLeftButtonDownCallback(const MouseButtonCallback& callback) { _mouseLeftButtonDownCallback = callback; }
-	void setMouseLeftButtonUpCallback(const MouseButtonCallback& callback) { _mouseLeftButtonUpCallback = callback; }
-	void setMouseMoveCallback(const MouseMoveCallback& callback) { _mouseMoveCallback = callback; }
-	void setMouseScrollCallback(const MouseScrollCallback& callback) { _mouseScrollCallback = callback; }
+	void setMouseButtonCallback(const InputEvents::MouseButtonCallback& callback) { _mouseButtonCallback = callback; }
+	void setMouseButtonWithMoveCallback(const InputEvents::MouseButtonWithMoveCallback& callback) { _mouseButtonWithMoveCallback = callback; }
+	void setMouseMoveCallback(const InputEvents::MouseMoveCallback& callback) { _mouseMoveCallback = callback; }
+	void setMouseScrollCallback(const InputEvents::MouseScrollCallback& callback) { _mouseScrollCallback = callback; }
+	void captureMouse();
+	void uncaptureMouse();
 
 private:
 	Window(IWindowImpl* impl);
