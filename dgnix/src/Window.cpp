@@ -57,6 +57,11 @@ Window::Window(IWindowImpl* impl):
 				_mouseScrollCallback(yOffset);
 			}
 			});
+		inputHandler->setKeyCallback([this](InputEvents::KeyboardKey key, InputEvents::KeyState state, InputEvents::KeyMod mod) {
+			if (_keyCallback) {
+				_keyCallback(key, state, mod);
+			}
+			});
 	}
 }
 
