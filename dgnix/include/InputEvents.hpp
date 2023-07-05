@@ -8,7 +8,8 @@ namespace InputEvents {
 		LEFT_BUTTON,
 		RIGHT_BUTTON,
 		MIDDLE_BUTTON,
-		UNDEFINED
+		UNDEFINED,
+		MAX_COUNT
 	};
 
 	enum class KeyboardKey : int
@@ -133,14 +134,16 @@ namespace InputEvents {
 		KEY_RIGHT_ALT,
 		KEY_RIGHT_SUPER,
 		KEY_MENU,
-		UNDEFINED
+		UNDEFINED,
+		MAX_COUNT
 	};
 
 	enum class KeyState : int
 	{
 		KEY_UP,
 		KEY_DOWN,
-		UNDEFINED
+		UNDEFINED,
+		MAX_COUNT
 	};
 
 	enum class KeyMod : int
