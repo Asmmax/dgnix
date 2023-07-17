@@ -109,6 +109,15 @@ View* Window::creteView(Texture* fboTexture)
 	return newView;
 }
 
+void Window::releaseView(View* view)
+{
+	auto foundIt = std::find(_views.begin(), _views.end(), view);
+	if (foundIt != _views.end()) {
+		delete* foundIt;
+		_views.erase(foundIt);
+	}
+}
+
 Loader* Window::getLoader()
 {
 	if (!_loader) {

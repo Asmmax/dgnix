@@ -40,6 +40,7 @@ public:
 	bool isDone();
 	void handle();
 	View* creteView(Texture* fboTexture);
+	void releaseView(View* view);
 	Loader* getLoader();
 
 	void beginRender();
