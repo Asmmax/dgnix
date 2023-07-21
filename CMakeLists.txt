@@ -1,5 +1,6 @@
 cmake_minimum_required (VERSION 3.8)
 
+set(OpenGL_GL_PREFERENCE LEGACY)
 find_package(OpenGL REQUIRED)
 
 if (NOT TARGET glm_interface)
