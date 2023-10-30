@@ -136,6 +136,7 @@ void GLShaderImpl::terminate()
 {
 	gl::DeleteProgram(_programHandle);
 	_programHandle = 0;
+	_cachedLocations.clear();
 }
 
 void GLShaderImpl::free()
@@ -187,5 +188,12 @@ void GLShaderImpl::setUniform(unsigned int location, int value)
 
 unsigned int GLShaderImpl::getLocation(const StringId& name) const
 {
-	return gl::GetUniformLocation(_programHandle, name.getChars());
+	auto foundIt = _cachedLocations.find(name);
+	if (foundIt != _cachedLocations.end()) {
+		return foundIt->second;
+	}
+	unsigned int location = gl::GetUniformLocation(_programHandle, name.getChars());
+	_cachedLocations.emplace(name, location);
+
+	return location;
 }

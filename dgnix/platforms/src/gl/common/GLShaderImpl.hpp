@@ -1,6 +1,7 @@
 #pragma once
 #include "resources/IShaderImpl.hpp"
 #include "PoolAllocator.hpp"
+#include <unordered_map>
 
 class GLShaderImpl : public IShaderImpl
 {
@@ -10,6 +11,7 @@ private:
 	unsigned int _programHandle;
 	PoolAllocator<GLShaderImpl>* _allocator;
 
+	mutable std::unordered_map<StringId, unsigned int> _cachedLocations;
 public:
 	GLShaderImpl(PoolAllocator<GLShaderImpl>* allocator);
 
