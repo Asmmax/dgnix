@@ -38,6 +38,33 @@ IWindowImpl* GLFWApplicationImpl::createWindow(int width, int height, const std:
 	return new GLFWWindowImpl(window);
 }
 
+IWindowImpl* GLFWApplicationImpl::createFullscreenWindow(const std::string& title)
+{
+	GLFWmonitor* monitor = glfwGetPrimaryMonitor();
+	const GLFWvidmode* mode = glfwGetVideoMode(monitor);
+
+	auto window = glfwCreateWindow(mode->width, mode->height, title.c_str(), monitor, NULL);
+	if (!window) {
+		return nullptr;
+	}
+
+	glfwMakeContextCurrent(window);
+
+	gl::exts::LoadTest didLoad = gl::sys::LoadFunctions();
+	assert(didLoad);
+	if (!didLoad) {
+		glfwDestroyWindow(window);
+		fprintf(stderr, "OpenGl functions isn't available!\n");
+		return nullptr;
+	}
+
+	glfwMakeContextCurrent(NULL);
+
+	printf("Number of functions that failed to load: %i.\n", didLoad.GetNumMissing());
+
+	return new GLFWWindowImpl(window);
+}
+
 double GLFWApplicationImpl::getTime()
 {
 	return glfwGetTime();

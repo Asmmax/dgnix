@@ -47,5 +47,6 @@ public:
 	void bindImpl();
 
 	Window* getWindow(int width, int height, const std::string& title);
+	Window* getFullscreenWindow(const std::string& title);
 	double GetTime();
 };

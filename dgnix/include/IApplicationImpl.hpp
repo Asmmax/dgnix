@@ -11,5 +11,6 @@ public:
 	virtual bool init() = 0;
 	virtual void terminate() = 0;
 	virtual IWindowImpl* createWindow(int width, int height, const std::string& title) = 0;
+	virtual IWindowImpl* createFullscreenWindow(const std::string& title) = 0;
 	virtual double getTime() = 0;
 };

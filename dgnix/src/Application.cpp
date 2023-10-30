@@ -98,6 +98,25 @@ Window* Application::getWindow(int width, int height, const std::string& title)
     return _window.get();
 }
 
+Window* Application::getFullscreenWindow(const std::string& title)
+{
+    if (!_isValid)
+        return nullptr;
+
+    if (!_impl)
+        return nullptr;
+
+    assert(!_window);
+
+    auto windowImpl = _impl->createFullscreenWindow(title);
+    if (!windowImpl) {
+        return nullptr;
+    }
+
+    _window.reset(new Window(windowImpl));
+    return _window.get();
+}
+
 double Application::GetTime()
 {
     if (!_isValid || !_impl)

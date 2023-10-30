@@ -8,5 +8,6 @@ public:
 	bool init() override;
 	void terminate() override;
 	IWindowImpl* createWindow(int width, int height, const std::string& title) override;
+	IWindowImpl* createFullscreenWindow(const std::string& title) override;
 	double getTime() override;
 };
