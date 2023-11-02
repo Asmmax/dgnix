@@ -74,6 +74,11 @@ void GLFWGraphicsContext::renderImgui()
 	ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 }
 
+void GLFWGraphicsContext::swapInterval(int frameCount)
+{
+	glfwSwapInterval(frameCount);
+}
+
 void GLFWGraphicsContext::swapBuffers()
 {
 	glfwSwapBuffers(_window);

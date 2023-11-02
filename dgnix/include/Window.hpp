@@ -43,11 +43,15 @@ public:
 	void releaseView(View* view);
 	Loader* getLoader();
 
-	void beginRender();
+	void prepareRender();
 	void render(const Model* model);
 	void setupImgui();
 	void renderImgui();
-	void endRender();
+	void setVSync(bool enabled);
+	void setFullscreen(int width, int height, int framerate);
+	int getFramerate() const;
+	void setWindowed();
+	void swapBuffers();
 
 	void setViewMatrix(const glm::mat4& matrix) { _viewMatrix = matrix; }
 	const glm::mat4& getViewMatrix() const { return _viewMatrix; }

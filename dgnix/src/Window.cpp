@@ -137,7 +137,7 @@ Loader* Window::getLoader()
 	return _loader.get();
 }
 
-void Window::beginRender()
+void Window::prepareRender()
 {
 	auto graphicsContext = _impl->getGraphicsContext();
 	if (!graphicsContext) {
@@ -190,7 +190,38 @@ void Window::renderImgui()
 	graphicsContext->renderImgui();
 }
 
-void Window::endRender()
+void Window::setVSync(bool enabled)
+{
+	auto graphicsContext = _impl->getGraphicsContext();
+	if (!graphicsContext) {
+		return;
+	}
+	graphicsContext->swapInterval(enabled ? 1 : 0);
+}
+
+void Window::setFullscreen(int width, int height, int framerate)
+{
+	if (_impl) {
+		_impl->setFullscreen(width, height, framerate);
+	}
+}
+
+int Window::getFramerate() const
+{
+	if (_impl) {
+		return _impl->getFramerate();
+	}
+	return 0;
+}
+
+void Window::setWindowed()
+{
+	if (_impl) {
+		_impl->setWindowed();
+	}
+}
+
+void Window::swapBuffers()
 {
 	auto graphicsContext = _impl->getGraphicsContext();
 	if (!graphicsContext) {

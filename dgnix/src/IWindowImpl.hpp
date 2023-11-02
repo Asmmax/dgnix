@@ -18,4 +18,7 @@ public:
 	virtual IInputHandler* getInputHandler() = 0;
 
 	virtual IViewImpl* createView() = 0;
+	virtual void setFullscreen(int width, int height, int framerate) = 0;
+	virtual int getFramerate() const = 0;
+	virtual void setWindowed() = 0;
 };

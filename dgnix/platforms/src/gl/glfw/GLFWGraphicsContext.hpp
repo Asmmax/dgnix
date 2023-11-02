@@ -24,6 +24,7 @@ public:
 	void clearBuffer(const glm::vec3& background) override;
 	void setupImgui() override;
 	void renderImgui() override;
+	void swapInterval(int frameCount) override;
 	void swapBuffers() override;
 
 	ILoaderImpl* createLoader() override;

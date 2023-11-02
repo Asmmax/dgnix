@@ -24,6 +24,7 @@ public:
 	virtual void clearBuffer(const glm::vec3& background) = 0;
 	virtual void setupImgui() = 0;
 	virtual void renderImgui() = 0;
+	virtual void swapInterval(int frameCount) = 0;
 	virtual void swapBuffers() = 0;
 
 	virtual ILoaderImpl* createLoader() = 0;

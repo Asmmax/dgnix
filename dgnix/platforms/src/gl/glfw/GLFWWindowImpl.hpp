@@ -14,6 +14,11 @@ private:
 	GLFWGraphicsContext _graphicsContext;
 	GLFWInputHandler _inputHandler;
 
+	int _lastX;
+	int _lastY;
+	int _lastWidth;
+	int _lastHeight;
+
 public:
 	GLFWWindowImpl(GLFWwindow* window);
 
@@ -25,4 +30,7 @@ public:
 	IInputHandler* getInputHandler() override;
 
 	IViewImpl* createView() override;
+	void setFullscreen(int width, int height, int framerate) override;
+	int getFramerate() const override;
+	void setWindowed() override;
 };
