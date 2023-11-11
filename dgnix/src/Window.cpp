@@ -155,9 +155,13 @@ void Window::render(const Model* model)
 		return;
 	}
 
+	auto size = graphicsContext->getFramebufferSize();
+	if (size.width == 0 || size.height == 0) {
+		return;
+	}
+
 	_statePool.push();
 
-	auto size = graphicsContext->getFramebufferSize();
 	glm::mat4 projMat = glm::perspective(45.0f, size.width / (float)size.height, 0.01f, 1000.0f);
 
 	if (model) {
