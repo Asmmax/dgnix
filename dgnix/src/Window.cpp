@@ -1,5 +1,3 @@
-#include "..\include\Window.hpp"
-#include "..\include\Window.hpp"
 #include "Window.hpp"
 #include "IWindowImpl.hpp"
 #include "IInputHandler.hpp"

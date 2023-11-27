@@ -83,7 +83,7 @@ void Light::predraw(DrawStatePoolDef& statePool)
 		return;
 	}
 
-	if (!_names || _names && _names->getId() != id) {
+	if (!_names || (_names && _names->getId() != id)) {
 		_names = std::make_unique<LightNames>(id);
 	}
 

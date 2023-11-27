@@ -1,4 +1,3 @@
-#pragma once
 #include "BBox.hpp"
 #include "CommonMath.hpp"
 #include <array>
