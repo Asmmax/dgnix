@@ -5,10 +5,13 @@ set(glfw_libs_dir "libs/")
 
 if(WIN32)
 	set(lib_extension lib)
+elseif(UNIX)
+	set(lib_extension a)
 endif()
 
 add_library(glfw_lib STATIC IMPORTED)
 set_target_properties(glfw_lib PROPERTIES
+			IMPORTED_LOCATION "${CMAKE_CURRENT_SOURCE_DIR}/${glfw_libs_dir}glfw3.${lib_extension}"
 			IMPORTED_LOCATION_RELEASE "${CMAKE_CURRENT_SOURCE_DIR}/${glfw_libs_dir}glfw3.${lib_extension}"
 			IMPORTED_LOCATION_DEBUG "${CMAKE_CURRENT_SOURCE_DIR}/${glfw_libs_dir}glfw3d.${lib_extension}"
 )

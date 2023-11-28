@@ -25,9 +25,6 @@ target_compile_features (imgui PRIVATE cxx_std_11)
 target_include_directories(imgui PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/imgui/")
 target_link_libraries(imgui PRIVATE ${CMAKE_DL_LIBS})
 
-install(TARGETS imgui LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR})
-install(FILES ${imgui_include} TYPE INCLUDE)
-
 
 
 set(imgui_gl_include 

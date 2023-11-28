@@ -29,5 +29,3 @@ target_include_directories(dgnix PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/${dgnix_inc
 								PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/${dgnix_src_dir}")
 target_link_libraries(dgnix PRIVATE glfw_interface PUBLIC glm_interface PRIVATE imgui_glfw PRIVATE gl PRIVATE stb PUBLIC infrastruct)
 
-install(TARGETS dgnix LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR})
-install(FILES ${dgnix_include} TYPE INCLUDE)
