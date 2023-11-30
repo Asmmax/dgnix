@@ -1,18 +1,31 @@
 cmake_minimum_required (VERSION 3.8)
 
-set(OpenGL_GL_PREFERENCE LEGACY)
-find_package(OpenGL REQUIRED)
+set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS ON)
 
-if (NOT TARGET glm_interface)
-   add_subdirectory("deps/glm")
-endif()
+set(dgnix_include_dir "include/")
+set(dgnix_src_dir "src/")
 
-if (NOT TARGET infrastruct)
-   add_subdirectory ("deps/infrastruct")
-endif()
+set(dgnix_platforms_include_dir "platforms/include/gl/glfw")
+set(dgnix_platforms_src_dir "platforms/src/gl/")
 
-add_subdirectory ("deps/gl")
-add_subdirectory ("deps/stb")
-add_subdirectory ("deps/glfw")
-add_subdirectory ("deps/imgui")
-add_subdirectory ("dgnix")
+file(GLOB_RECURSE dgnix_include "${dgnix_include_dir}/*.hpp")
+file(GLOB_RECURSE dgnix_include_private "${dgnix_src_dir}/*.hpp")
+file(GLOB_RECURSE dgnix_src "${dgnix_src_dir}/*.cpp")
+
+file(GLOB_RECURSE dgnix_platforms_include "${dgnix_platforms_include_dir}/*.hpp")
+file(GLOB_RECURSE dgnix_platforms_include_private "${dgnix_platforms_src_dir}/glfw/*.hpp" "${dgnix_platforms_src_dir}/common/*.hpp")
+file(GLOB_RECURSE dgnix_platforms_src "${dgnix_platforms_src_dir}/glfw/*.cpp" "${dgnix_platforms_src_dir}/common/*.cpp")
+
+add_library (dgnix SHARED 
+${dgnix_include}  
+${dgnix_include_private}
+${dgnix_src}
+${dgnix_platforms_include}
+${dgnix_platforms_include_private}
+${dgnix_platforms_src})
+
+target_compile_features (dgnix PRIVATE cxx_std_17)
+target_include_directories(dgnix PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/${dgnix_include_dir}" "${CMAKE_CURRENT_SOURCE_DIR}/${dgnix_platforms_include_dir}" 
+								PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/${dgnix_src_dir}")
+target_link_libraries(dgnix PRIVATE glfw_interface PUBLIC glm_interface PRIVATE imgui_glfw PRIVATE gl PRIVATE stb PUBLIC infrastruct)
+
