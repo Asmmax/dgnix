@@ -2,6 +2,11 @@ cmake_minimum_required (VERSION 3.8)
 
 set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS ON)
 
+if(UNIX)
+	set(THREADS_PREFER_PTHREAD_FLAG ON)
+	find_package(Threads REQUIRED)
+endif()
+
 set(dgnix_include_dir "include/")
 set(dgnix_src_dir "src/")
 
@@ -27,5 +32,6 @@ ${dgnix_platforms_src})
 target_compile_features (dgnix PRIVATE cxx_std_17)
 target_include_directories(dgnix PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/${dgnix_include_dir}" "${CMAKE_CURRENT_SOURCE_DIR}/${dgnix_platforms_include_dir}" 
 								PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/${dgnix_src_dir}")
-target_link_libraries(dgnix PRIVATE glfw_interface PUBLIC glm_interface PRIVATE imgui_glfw PRIVATE gl PRIVATE stb PUBLIC infrastruct)
+
+target_link_libraries(dgnix PRIVATE glfw_interface PUBLIC glm_interface PRIVATE imgui_glfw PRIVATE gl PRIVATE stb PUBLIC infrastruct PRIVATE $<$<PLATFORM_ID:Linux>:Threads::Threads>)
 
