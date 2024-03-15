@@ -8,7 +8,13 @@ class IShaderImpl;
 class ILoaderImpl
 {
 public:
-	virtual ~ILoaderImpl() {}
+	ILoaderImpl() = default;
+	ILoaderImpl(const ILoaderImpl& other) = delete;
+	ILoaderImpl(ILoaderImpl&& other) = delete;
+	ILoaderImpl& operator=(const ILoaderImpl& other) = delete;
+	ILoaderImpl& operator=(ILoaderImpl&& other) = delete;
+
+	virtual ~ILoaderImpl() = default;
 
 	virtual IMeshImpl* createMesh() = 0;
 	virtual ITextureImpl* createTexture() = 0;

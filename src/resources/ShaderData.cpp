@@ -11,7 +11,7 @@ std::string loadShader(const std::string& fileName)
 
 	if (!file.is_open()) {
 		std::cerr << "Shader file \"" << fileName << "\" could not be open!\n";
-		return std::string();
+		return {};
 	}
 
 	data.clear();

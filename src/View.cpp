@@ -52,7 +52,7 @@ void View::render(const Model* model)
 
 	_statePool.push();
 
-	glm::mat4 projMat = glm::perspective(45.0f, _width / (float)_height, 0.01f, 1000.0f);
+	const glm::mat4 projMat = glm::perspective(45.0f, _width / static_cast<float>(_height), 0.01f, 1000.0f);
 
 	if (model) {
 		model->predraw(_statePool, _matrix, projMat);

@@ -37,10 +37,15 @@ private:
 public:
 	~Window();
 
-	bool isDone();
+	Window(const Window& other) = delete;
+	Window(Window&& other) = delete;
+	Window& operator=(const Window& other) = delete;
+	Window& operator=(Window&& other) = delete;
+
+	bool isDone() const;
 	void handle();
 	View* creteView(Texture* fboTexture);
-	void releaseView(View* view);
+	void releaseView(const View* view);
 	Loader* getLoader();
 
 	void prepareRender();
@@ -69,5 +74,5 @@ public:
 	void uncaptureMouse();
 
 private:
-	Window(IWindowImpl* impl);
+	explicit Window(IWindowImpl* impl);
 };

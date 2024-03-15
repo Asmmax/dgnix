@@ -8,7 +8,13 @@ class IViewImpl;
 class IWindowImpl
 {
 public:
-	virtual ~IWindowImpl() {}
+	IWindowImpl() = default;
+	IWindowImpl(const IWindowImpl& other) = delete;
+	IWindowImpl(IWindowImpl&& other) = delete;
+	IWindowImpl& operator=(const IWindowImpl& other) = delete;
+	IWindowImpl& operator=(IWindowImpl&& other) = delete;
+
+	virtual ~IWindowImpl() = default;
 
 	virtual void init() = 0;
 	virtual void terminate() = 0;

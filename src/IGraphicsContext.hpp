@@ -1,5 +1,4 @@
 #pragma once
-#include <utility>
 #include <glm/vec3.hpp>
 
 class ILoaderImpl;
@@ -13,7 +12,13 @@ public:
 		int height = 1;
 	};
 
-	virtual ~IGraphicsContext() {}
+	IGraphicsContext() = default;
+	IGraphicsContext(const IGraphicsContext& other) = delete;
+	IGraphicsContext(IGraphicsContext&& other) = delete;
+	IGraphicsContext& operator=(const IGraphicsContext& other) = delete;
+	IGraphicsContext& operator=(IGraphicsContext&& other) = delete;
+
+	virtual ~IGraphicsContext() = default;
 
 	virtual void init() = 0;
 	virtual void terminate() = 0;

@@ -2,6 +2,7 @@
 #include "gl/gl_core_4_3.hpp"
 #include "GLFW/glfw3.h"
 #include "backends/imgui_impl_glfw.h"
+#include "../common/GLViewImpl.hpp"
 
 GLFWWindowImpl::GLFWWindowImpl(GLFWwindow* window):
 	_window(window),
@@ -56,7 +57,7 @@ IViewImpl* GLFWWindowImpl::createView()
 void GLFWWindowImpl::setFullscreen(int width, int height, int framerate)
 {
 	GLFWmonitor* currentMonitor = glfwGetWindowMonitor(_window);
-	if (currentMonitor != NULL) {
+	if (currentMonitor != nullptr) {
 		return;
 	}
 
@@ -74,7 +75,7 @@ void GLFWWindowImpl::setFullscreen(int width, int height, int framerate)
 int GLFWWindowImpl::getFramerate() const
 {
 	GLFWmonitor* currentMonitor = glfwGetWindowMonitor(_window);
-	if (currentMonitor == NULL) {
+	if (currentMonitor == nullptr) {
 		return 0;
 	}
 
@@ -85,7 +86,7 @@ int GLFWWindowImpl::getFramerate() const
 void GLFWWindowImpl::setWindowed()
 {
 	GLFWmonitor* currentMonitor = glfwGetWindowMonitor(_window);
-	if (currentMonitor != NULL) {
-		glfwSetWindowMonitor(_window, NULL, _lastX, _lastY, _lastWidth, _lastHeight, GLFW_DONT_CARE);
+	if (currentMonitor != nullptr) {
+		glfwSetWindowMonitor(_window, nullptr, _lastX, _lastY, _lastWidth, _lastHeight, GLFW_DONT_CARE);
 	}
 }

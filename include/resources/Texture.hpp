@@ -13,8 +13,13 @@ private:
 	int _height;
 
 public:
-	Texture(ITextureImpl* textureImpl);
+	explicit Texture(ITextureImpl* textureImpl);
 	~Texture();
+
+	Texture(const Texture& other) = delete;
+	Texture(Texture&& other) = delete;
+	Texture& operator=(const Texture& other) = delete;
+	Texture& operator=(Texture&& other) = delete;
 
 	void init(const TextureData& data);
 	void apply(int textureUnit);

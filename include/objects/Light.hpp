@@ -17,7 +17,7 @@ private:
 		StringId _fadingAreaName;
 
 	public:
-		LightNames(int id);
+		explicit LightNames(int id);
 
 		int getId() const { return _id; }
 		const StringId& getColorName() const { return _colorName; }
@@ -52,5 +52,5 @@ public:
 	static int MAX_LIGHT_COUNT;
 
 private:
-	int nextFreeId(const DrawStateDef& state) const;
+	static int nextFreeId(const DrawStateDef& state);
 };

@@ -125,7 +125,7 @@ void Loader::release(Mesh* mesh)
 	}
 	_context->makeCurrent();
 
-	auto foundIt = std::find(_meshes.begin(), _meshes.end(), mesh);
+	const auto foundIt = std::find(_meshes.begin(), _meshes.end(), mesh);
 	if (foundIt == _meshes.end()) {
 		return;
 	}
@@ -146,7 +146,7 @@ void Loader::release(Texture* texture)
 	}
 	_context->makeCurrent();
 
-	auto foundIt = std::find(_textures.begin(), _textures.end(), texture);
+	const auto foundIt = std::find(_textures.begin(), _textures.end(), texture);
 	if (foundIt == _textures.end()) {
 		return;
 	}
@@ -167,7 +167,7 @@ void Loader::release(Shader* shader)
 	}
 	_context->makeCurrent();
 
-	auto foundIt = std::find(_shaders.begin(), _shaders.end(), shader);
+	const auto foundIt = std::find(_shaders.begin(), _shaders.end(), shader);
 	if (foundIt == _shaders.end()) {
 		return;
 	}

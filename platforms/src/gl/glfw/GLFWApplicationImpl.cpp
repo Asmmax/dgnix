@@ -16,7 +16,7 @@ void GLFWApplicationImpl::terminate()
 
 IWindowImpl* GLFWApplicationImpl::createWindow(int width, int height, const std::string& title)
 {
-	auto window = glfwCreateWindow(width, height, title.c_str(), NULL, NULL);
+	auto window = glfwCreateWindow(width, height, title.c_str(), nullptr, nullptr);
 	if (!window) {
 		return nullptr;
 	}
@@ -31,14 +31,14 @@ IWindowImpl* GLFWApplicationImpl::createWindow(int width, int height, const std:
 		return nullptr;
 	}
 
-	glfwMakeContextCurrent(NULL);
+	glfwMakeContextCurrent(nullptr);
 
 	printf("Number of functions that failed to load: %i.\n", didLoad.GetNumMissing());
 
 	return new GLFWWindowImpl(window);
 }
 
-double GLFWApplicationImpl::getTime()
+double GLFWApplicationImpl::getTime() const
 {
 	return glfwGetTime();
 }

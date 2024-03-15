@@ -1,6 +1,5 @@
 #pragma once
 #include "DrawState.hpp"
-#include <memory>
 #include <glm/vec3.hpp>
 #include <glm/mat4x4.hpp>
 
@@ -26,6 +25,11 @@ private:
 public:
 	View(IViewImpl* viewImpl, Texture* fboTexture);
 	~View();
+
+	View(const View& other) = delete;
+	View(View&& other) = delete;
+	View& operator=(const View& other) = delete;
+	View& operator=(View&& other) = delete;
 
 	void init(IGraphicsContext* context);
 	void render(const Model* model);

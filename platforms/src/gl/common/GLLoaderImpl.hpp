@@ -12,7 +12,7 @@ class GLLoaderImpl : public ILoaderImpl
 	PoolAllocator<GLShaderImpl> _shaderAllocator;
 
 public:
-	GLLoaderImpl(size_t poolSize = 100);
+	explicit GLLoaderImpl(size_t poolSize = 100);
 
 	IMeshImpl* createMesh() override;
 	ITextureImpl* createTexture() override;

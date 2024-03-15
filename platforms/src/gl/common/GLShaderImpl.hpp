@@ -13,7 +13,7 @@ private:
 
 	mutable std::unordered_map<StringId, unsigned int> _cachedLocations;
 public:
-	GLShaderImpl(PoolAllocator<GLShaderImpl>* allocator);
+	explicit GLShaderImpl(PoolAllocator<GLShaderImpl>* allocator);
 
 	void compileVertexShader(const std::string& shader) override;
 	void compileFragmentShader(const std::string& shader) override;

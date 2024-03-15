@@ -15,7 +15,7 @@ private:
 	DrawState* _parentState;
 
 public:
-	DrawState(DrawState* parentState = nullptr);
+	explicit DrawState(DrawState* parentState = nullptr);
 
 	template <typename Type>
 	void add(const StringId& name, const Type& value);
@@ -39,33 +39,33 @@ public:
 
 private:
 	template<typename Type, std::size_t... Is>
-	void add(const StringId& name, const Type& value, std::tuple<UnorderedMap<StringId, Types>...>& tuple, std::index_sequence<Is...>);
+	static void add(const StringId& name, const Type& value, std::tuple<UnorderedMap<StringId, Types>...>& tuple, std::index_sequence<Is...>);
 
 	template<typename Type, typename CurrentType, typename... Remains>
-	void add(const StringId& name, const Type& value, UnorderedMap<StringId, CurrentType>& currentMap, UnorderedMap<StringId, Remains>&... remains);
+	static void add(const StringId& name, const Type& value, UnorderedMap<StringId, CurrentType>& currentMap, UnorderedMap<StringId, Remains>&... remains);
 
 	template<typename Type, typename... Remains>
-	void add(const StringId& name, const Type& value, UnorderedMap<StringId, Type>& currentMap, UnorderedMap<StringId, Remains>&... remains);
+	static void add(const StringId& name, const Type& value, UnorderedMap<StringId, Type>& currentMap, UnorderedMap<StringId, Remains>&... remains);
 
 
 	template<typename Type, std::size_t... Is>
-	void addOrSet(const StringId& name, const Type& value, std::tuple<UnorderedMap<StringId, Types>...>& tuple, std::index_sequence<Is...>);
+	static void addOrSet(const StringId& name, const Type& value, std::tuple<UnorderedMap<StringId, Types>...>& tuple, std::index_sequence<Is...>);
 
 	template<typename Type, typename CurrentType, typename... Remains>
-	void addOrSet(const StringId& name, const Type& value, UnorderedMap<StringId, CurrentType>& currentMap, UnorderedMap<StringId, Remains>&... remains);
+	static void addOrSet(const StringId& name, const Type& value, UnorderedMap<StringId, CurrentType>& currentMap, UnorderedMap<StringId, Remains>&... remains);
 
 	template<typename Type, typename... Remains>
-	void addOrSet(const StringId& name, const Type& value, UnorderedMap<StringId, Type>& currentMap, UnorderedMap<StringId, Remains>&... remains);
+	static void addOrSet(const StringId& name, const Type& value, UnorderedMap<StringId, Type>& currentMap, UnorderedMap<StringId, Remains>&... remains);
 
 
 	template<typename Type, std::size_t... Is>
-	void set(const StringId& name, const Type& value, std::tuple<UnorderedMap<StringId, Types>...>& tuple, std::index_sequence<Is...>);
+	static void set(const StringId& name, const Type& value, std::tuple<UnorderedMap<StringId, Types>...>& tuple, std::index_sequence<Is...>);
 
 	template<typename Type, typename CurrentType, typename... Remains>
-	void set(const StringId& name, const Type& value, UnorderedMap<StringId, CurrentType>& currentMap, UnorderedMap<StringId, Remains>&... remains);
+	static void set(const StringId& name, const Type& value, UnorderedMap<StringId, CurrentType>& currentMap, UnorderedMap<StringId, Remains>&... remains);
 
 	template<typename Type, typename... Remains>
-	void set(const StringId& name, const Type& value, UnorderedMap<StringId, Type>& currentMap, UnorderedMap<StringId, Remains>&... remains);
+	static void set(const StringId& name, const Type& value, UnorderedMap<StringId, Type>& currentMap, UnorderedMap<StringId, Remains>&... remains);
 
 
 	template<typename Type, std::size_t... Is>
@@ -79,23 +79,23 @@ private:
 
 
 	template<std::size_t... Is>
-	void remove(const StringId& name, std::tuple<UnorderedMap<StringId, Types>...>& tuple, std::index_sequence<Is...>);
+	static void remove(const StringId& name, std::tuple<UnorderedMap<StringId, Types>...>& tuple, std::index_sequence<Is...>);
 
 	template<typename CurrentType, typename... Remains>
-	void remove(const StringId& name, UnorderedMap<StringId, CurrentType>& currentMap, UnorderedMap<StringId, Remains>&... remains);
+	static void remove(const StringId& name, UnorderedMap<StringId, CurrentType>& currentMap, UnorderedMap<StringId, Remains>&... remains);
 
 	template<typename LastType>
-	void remove(const StringId& name, UnorderedMap<StringId, LastType>& lastMap);
+	static void remove(const StringId& name, UnorderedMap<StringId, LastType>& lastMap);
 
 
 	template<std::size_t... Is>
-	void clear(std::tuple<UnorderedMap<StringId, Types>...>& tuple, std::index_sequence<Is...>);
+	static void clear(std::tuple<UnorderedMap<StringId, Types>...>& tuple, std::index_sequence<Is...>);
 
 	template<typename CurrentType, typename... Remains>
-	void clear(UnorderedMap<StringId, CurrentType>& currentMap, UnorderedMap<StringId, Remains>&... remains);
+	static void clear(UnorderedMap<StringId, CurrentType>& currentMap, UnorderedMap<StringId, Remains>&... remains);
 
 	template<typename LastType>
-	void clear(UnorderedMap<StringId, LastType>& lastMap);
+	static void clear(UnorderedMap<StringId, LastType>& lastMap);
 
 
 	template<std::size_t... Is>
@@ -109,23 +109,23 @@ private:
 
 
 	template<std::size_t... Is>
-	void apply(Shader& shader, const std::tuple<UnorderedMap<StringId, Types>...>& tuple, std::index_sequence<Is...>) const;
+	static void apply(Shader& shader, const std::tuple<UnorderedMap<StringId, Types>...>& tuple, std::index_sequence<Is...>);
 
 	template<typename CurrentType, typename... Remains>
-	void apply(Shader& shader, const UnorderedMap<StringId, CurrentType>& currentMap, const UnorderedMap<StringId, Remains>&... remains) const;
+	static void apply(Shader& shader, const UnorderedMap<StringId, CurrentType>& currentMap, const UnorderedMap<StringId, Remains>&... remains);
 
 	template<typename Type>
-	void apply(Shader& shader, const UnorderedMap<StringId, Type>& map) const;
+	static void apply(Shader& shader, const UnorderedMap<StringId, Type>& map);
 
 
 	template<std::size_t... Is>
-	void apply(DrawState& otherState, const std::tuple<UnorderedMap<StringId, Types>...>& tuple, std::index_sequence<Is...>) const;
+	static void apply(DrawState& otherState, const std::tuple<UnorderedMap<StringId, Types>...>& tuple, std::index_sequence<Is...>);
 
 	template<typename CurrentType, typename... Remains>
-	void apply(DrawState& otherState, const UnorderedMap<StringId, CurrentType>& currentMap, const UnorderedMap<StringId, Remains>&... remains) const;
+	static void apply(DrawState& otherState, const UnorderedMap<StringId, CurrentType>& currentMap, const UnorderedMap<StringId, Remains>&... remains);
 
 	template<typename Type>
-	void apply(DrawState& otherState, const UnorderedMap<StringId, Type>& map) const;
+	static void apply(DrawState& otherState, const UnorderedMap<StringId, Type>& map);
 };
 
 
@@ -136,7 +136,7 @@ private:
 	std::vector<DrawState<Types...>> _pool;
 	size_t _cursor;
 public:
-	DrawStatePool(size_t size);
+	explicit DrawStatePool(size_t size);
 
 	DrawState<Types...>& get();
 
@@ -147,3 +147,35 @@ public:
 
 using DrawStateDef = DrawState<glm::mat4, glm::mat3, glm::vec4, glm::vec3, float, int>;
 using DrawStatePoolDef = DrawStatePool<glm::mat4, glm::mat3, glm::vec4, glm::vec3, float, int>;
+
+
+extern template class DrawState<glm::mat4, glm::mat3, glm::vec4, glm::vec3, float, int>;
+extern template class DrawStatePool<glm::mat4, glm::mat3, glm::vec4, glm::vec3, float, int>;
+
+extern template void DrawState<glm::mat4, glm::mat3, glm::vec4, glm::vec3, float, int>::add(const StringId& name, const glm::mat4& value);
+extern template void DrawState<glm::mat4, glm::mat3, glm::vec4, glm::vec3, float, int>::add(const StringId& name, const glm::mat3& value);
+extern template void DrawState<glm::mat4, glm::mat3, glm::vec4, glm::vec3, float, int>::add(const StringId& name, const glm::vec4& value);
+extern template void DrawState<glm::mat4, glm::mat3, glm::vec4, glm::vec3, float, int>::add(const StringId& name, const glm::vec3& value);
+extern template void DrawState<glm::mat4, glm::mat3, glm::vec4, glm::vec3, float, int>::add(const StringId& name, const float& value);
+extern template void DrawState<glm::mat4, glm::mat3, glm::vec4, glm::vec3, float, int>::add(const StringId& name, const int& value);
+
+extern template void DrawState<glm::mat4, glm::mat3, glm::vec4, glm::vec3, float, int>::addOrSet(const StringId& name, const glm::mat4& value);
+extern template void DrawState<glm::mat4, glm::mat3, glm::vec4, glm::vec3, float, int>::addOrSet(const StringId& name, const glm::mat3& value);
+extern template void DrawState<glm::mat4, glm::mat3, glm::vec4, glm::vec3, float, int>::addOrSet(const StringId& name, const glm::vec4& value);
+extern template void DrawState<glm::mat4, glm::mat3, glm::vec4, glm::vec3, float, int>::addOrSet(const StringId& name, const glm::vec3& value);
+extern template void DrawState<glm::mat4, glm::mat3, glm::vec4, glm::vec3, float, int>::addOrSet(const StringId& name, const float& value);
+extern template void DrawState<glm::mat4, glm::mat3, glm::vec4, glm::vec3, float, int>::addOrSet(const StringId& name, const int& value);
+
+extern template void DrawState<glm::mat4, glm::mat3, glm::vec4, glm::vec3, float, int>::set(const StringId& name, const glm::mat4& value);
+extern template void DrawState<glm::mat4, glm::mat3, glm::vec4, glm::vec3, float, int>::set(const StringId& name, const glm::mat3& value);
+extern template void DrawState<glm::mat4, glm::mat3, glm::vec4, glm::vec3, float, int>::set(const StringId& name, const glm::vec4& value);
+extern template void DrawState<glm::mat4, glm::mat3, glm::vec4, glm::vec3, float, int>::set(const StringId& name, const glm::vec3& value);
+extern template void DrawState<glm::mat4, glm::mat3, glm::vec4, glm::vec3, float, int>::set(const StringId& name, const float& value);
+extern template void DrawState<glm::mat4, glm::mat3, glm::vec4, glm::vec3, float, int>::set(const StringId& name, const int& value);
+
+extern template const glm::mat4& DrawState<glm::mat4, glm::mat3, glm::vec4, glm::vec3, float, int>::get<glm::mat4>(const StringId& name) const;
+extern template const glm::mat3& DrawState<glm::mat4, glm::mat3, glm::vec4, glm::vec3, float, int>::get<glm::mat3>(const StringId& name) const;
+extern template const glm::vec4& DrawState<glm::mat4, glm::mat3, glm::vec4, glm::vec3, float, int>::get<glm::vec4>(const StringId& name) const;
+extern template const glm::vec3& DrawState<glm::mat4, glm::mat3, glm::vec4, glm::vec3, float, int>::get<glm::vec3>(const StringId& name) const;
+extern template const float& DrawState<glm::mat4, glm::mat3, glm::vec4, glm::vec3, float, int>::get<float>(const StringId& name) const;
+extern template const int& DrawState<glm::mat4, glm::mat3, glm::vec4, glm::vec3, float, int>::get<int>(const StringId& name) const;

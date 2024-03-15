@@ -13,6 +13,7 @@ private:
 	std::unique_ptr<Window> _window;
 
 public:
+#ifdef _DEBUG
 	class StopWrapper
 	{
 	private:
@@ -23,11 +24,14 @@ public:
 		~StopWrapper();
 
 		StopWrapper(const StopWrapper& other) = delete;
-		void operator=(const StopWrapper& other) = delete;
+		StopWrapper& operator=(const StopWrapper& other) = delete;
+		StopWrapper(StopWrapper&& other) = delete;
+		StopWrapper& operator=(StopWrapper&& other) = delete;
 
-		Application* get();
+		Application* get() const;
 		void stop();
 	};
+#endif // _DEBUG
 
 private:
 	Application();
@@ -37,7 +41,9 @@ private:
 public:
 	~Application();
 	Application(const Application& other) = delete;
-	void operator=(const Application& other) = delete;
+	Application& operator=(const Application& other) = delete;
+	Application(Application&& other) = delete;
+	Application& operator=(Application&& other) = delete;
 	static Application& getInstance();
 #ifdef _DEBUG
 	static StopWrapper& getStopWrapper();
@@ -47,5 +53,13 @@ public:
 	void bindImpl();
 
 	Window* getWindow(int width, int height, const std::string& title);
-	double GetTime();
+	double GetTime() const;
 };
+
+template<typename Impl>
+void Application::bindImpl()
+{
+	clear();
+	_impl = std::make_unique<Impl>();
+	initGraphics();
+}

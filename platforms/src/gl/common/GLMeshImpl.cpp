@@ -12,7 +12,7 @@ GLMeshImpl::GLMeshImpl(PoolAllocator<GLMeshImpl>* allocator):
 void GLMeshImpl::init()
 {
 	_vboHandles.resize(3);
-	gl::GenBuffers(3, &_vboHandles[0]);
+	gl::GenBuffers(3, _vboHandles.data());
 
 	const GLuint posBufHandle = _vboHandles[0];
 	const GLuint normBufHandle = _vboHandles[1];
@@ -27,10 +27,10 @@ void GLMeshImpl::init()
 	gl::EnableVertexAttribArray(1);
 
 	gl::BindBuffer(gl::ARRAY_BUFFER, posBufHandle);
-	gl::VertexAttribPointer(0, 3, gl::FLOAT, gl::FALSE_, 0, NULL);
+	gl::VertexAttribPointer(0, 3, gl::FLOAT, gl::FALSE_, 0, nullptr);
 
 	gl::BindBuffer(gl::ARRAY_BUFFER, normBufHandle);
-	gl::VertexAttribPointer(1, 3, gl::FLOAT, gl::FALSE_, 0, NULL);
+	gl::VertexAttribPointer(1, 3, gl::FLOAT, gl::FALSE_, 0, nullptr);
 
 	gl::BindVertexArray(0);
 }
@@ -40,7 +40,7 @@ void GLMeshImpl::terminate()
 	gl::DeleteVertexArrays(1, &_vaoHandle);
 	_vaoHandle = 0;
 
-	gl::DeleteBuffers(static_cast<GLsizei>(_vboHandles.size()), &_vboHandles[0]);
+	gl::DeleteBuffers(static_cast<GLsizei>(_vboHandles.size()), _vboHandles.data());
 	_vboHandles.clear();
 }
 
@@ -55,7 +55,7 @@ void GLMeshImpl::draw(size_t indicesCount)
 {
 	gl::BindVertexArray(_vaoHandle);
 
-	gl::DrawElements(gl::TRIANGLES, static_cast<int>(indicesCount), gl::UNSIGNED_INT, 0);
+	gl::DrawElements(gl::TRIANGLES, static_cast<int>(indicesCount), gl::UNSIGNED_INT, nullptr);
 
 	gl::BindVertexArray(0);
 }

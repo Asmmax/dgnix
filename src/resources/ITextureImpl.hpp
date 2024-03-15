@@ -5,6 +5,12 @@ struct TextureData;
 class ITextureImpl
 {
 public:
+	ITextureImpl() = default;
+	ITextureImpl(const ITextureImpl& other) = delete;
+	ITextureImpl(ITextureImpl&& other) = delete;
+	ITextureImpl& operator=(const ITextureImpl& other) = delete;
+	ITextureImpl& operator=(ITextureImpl&& other) = delete;
+
 	virtual void init() = 0;
 	virtual void terminate() = 0;
 	virtual void free() = 0;
@@ -18,5 +24,5 @@ public:
 	virtual unsigned int getTextureHandle() const = 0;
 
 protected:
-	virtual ~ITextureImpl() {}
+	virtual ~ITextureImpl() = default;
 };

@@ -12,16 +12,14 @@
 
 void Window::captureMouse()
 {
-	auto inputHandler = _impl->getInputHandler();
-	if (inputHandler) {
+	if (auto inputHandler = _impl->getInputHandler()) {
 		inputHandler->captureMouse();
 	}
 }
 
 void Window::uncaptureMouse()
 {
-	auto inputHandler = _impl->getInputHandler();
-	if (inputHandler) {
+	if (auto inputHandler = _impl->getInputHandler()) {
 		inputHandler->uncaptureMouse();
 	}
 }
@@ -65,7 +63,7 @@ Window::Window(IWindowImpl* impl):
 
 Window::~Window()
 {
-	for (auto& viewPtr : _views) {
+	for (View* viewPtr : _views) {
 		delete viewPtr;
 	}
 
@@ -76,7 +74,7 @@ Window::~Window()
 	delete _impl;
 }
 
-bool Window::isDone()
+bool Window::isDone() const
 {
 	return _impl->isDone();
 }
@@ -107,9 +105,9 @@ View* Window::creteView(Texture* fboTexture)
 	return newView;
 }
 
-void Window::releaseView(View* view)
+void Window::releaseView(const View* view)
 {
-	auto foundIt = std::find(_views.begin(), _views.end(), view);
+	const auto foundIt = std::find(_views.begin(), _views.end(), view);
 	if (foundIt != _views.end()) {
 		delete* foundIt;
 		_views.erase(foundIt);
@@ -153,14 +151,14 @@ void Window::render(const Model* model)
 		return;
 	}
 
-	auto size = graphicsContext->getFramebufferSize();
+	const auto size = graphicsContext->getFramebufferSize();
 	if (size.width == 0 || size.height == 0) {
 		return;
 	}
 
 	_statePool.push();
 
-	glm::mat4 projMat = glm::perspective(45.0f, size.width / (float)size.height, 0.01f, 1000.0f);
+	const glm::mat4 projMat = glm::perspective(45.0f, size.width / (float)size.height, 0.01f, 1000.0f);
 
 	if (model) {
 		model->predraw(_statePool, _viewMatrix, projMat);

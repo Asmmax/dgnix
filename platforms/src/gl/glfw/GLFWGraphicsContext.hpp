@@ -1,7 +1,5 @@
 #pragma once
 #include "IGraphicsContext.hpp"
-#include "../common/GLLoaderImpl.hpp"
-#include <vector>
 
 struct GLFWwindow;
 struct ImGuiContext;
@@ -13,7 +11,7 @@ private:
 	ImGuiContext* _imguiContext;
 
 public:
-	GLFWGraphicsContext(GLFWwindow* window);
+	explicit GLFWGraphicsContext(GLFWwindow* window);
 
 	void init() override;
 	void terminate() override;

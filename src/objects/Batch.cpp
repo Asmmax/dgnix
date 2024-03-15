@@ -25,7 +25,7 @@ void Batch::setShader(Shader* shader)
 
 bool Batch::hasTexture(const StringId& name) const
 {
-	auto&& it = std::find_if(_textures.begin(), _textures.end(), [name](auto& texturePair) {
+	const auto it = std::find_if(_textures.begin(), _textures.end(), [name](auto& texturePair) {
 		return texturePair.first == name;
 		});
 
@@ -50,7 +50,7 @@ void Batch::setTexture(const StringId& name, Texture* texture)
 	}
 
 	assert(hasTexture(name));
-	auto&& it = std::find_if(_textures.begin(), _textures.end(), [name](auto& texturePair) {
+	const auto it = std::find_if(_textures.begin(), _textures.end(), [name](auto& texturePair) {
 		return texturePair.first == name;
 		});
 
@@ -60,7 +60,7 @@ void Batch::setTexture(const StringId& name, Texture* texture)
 void Batch::removeTexture(const StringId& name)
 {
 	assert(hasTexture(name));
-	auto&& it = std::find_if(_textures.begin(), _textures.end(), [name](auto& texturePair) {
+	const auto it = std::find_if(_textures.begin(), _textures.end(), [name](auto& texturePair) {
 		return texturePair.first == name;
 		});
 	_textures.erase(it);
@@ -71,7 +71,7 @@ Object* Batch::createObject()
 	Object* newObject = _objectAllocator.allocate();
 	_objectAllocator.construct(newObject);
 
-	auto foundIt = std::lower_bound(_objects.begin(), _objects.end(), newObject);
+	const auto foundIt = std::lower_bound(_objects.begin(), _objects.end(), newObject);
 	_objects.insert(foundIt, newObject);
 
 	return newObject;
@@ -82,7 +82,7 @@ Object* Batch::createObject(Object* other)
 	Object* newObject = _objectAllocator.allocate();
 	_objectAllocator.construct(newObject, *other);
 
-	auto foundIt = std::lower_bound(_objects.begin(), _objects.end(), newObject);
+	const auto foundIt = std::lower_bound(_objects.begin(), _objects.end(), newObject);
 	_objects.insert(foundIt, newObject);
 
 	return newObject;
@@ -90,33 +90,33 @@ Object* Batch::createObject(Object* other)
 
 void Batch::enableObject(Object* object)
 {
-	auto foundHidObjIt = std::lower_bound(_hiddenObjects.begin(), _hiddenObjects.end(), object);
+	const auto foundHidObjIt = std::lower_bound(_hiddenObjects.begin(), _hiddenObjects.end(), object);
 	if (*foundHidObjIt != object) {
 		return;
 	}
 
 	_hiddenObjects.erase(foundHidObjIt);
 
-	auto foundObjIt = std::lower_bound(_objects.begin(), _objects.end(), object);
+	const auto foundObjIt = std::lower_bound(_objects.begin(), _objects.end(), object);
 	_objects.insert(foundObjIt, object);
 }
 
 void Batch::disableObject(Object* object)
 {
-	auto foundObjIt = std::lower_bound(_objects.begin(), _objects.end(), object);
+	const auto foundObjIt = std::lower_bound(_objects.begin(), _objects.end(), object);
 	if (*foundObjIt != object) {
 		return;
 	}
 
 	_objects.erase(foundObjIt);
 
-	auto foundHidObjIt = std::lower_bound(_hiddenObjects.begin(), _hiddenObjects.end(), object);
+	const auto foundHidObjIt = std::lower_bound(_hiddenObjects.begin(), _hiddenObjects.end(), object);
 	_hiddenObjects.insert(foundHidObjIt, object);
 }
 
 void Batch::removeObject(Object* object)
 {
-	auto foundIt = std::lower_bound(_objects.begin(), _objects.end(), object);
+	const auto foundIt = std::lower_bound(_objects.begin(), _objects.end(), object);
 	if (*foundIt != object) {
 		return;
 	}
@@ -128,7 +128,7 @@ void Batch::removeObject(Object* object)
 
 void Batch::clear()
 {
-	for (auto& object : _objects) {
+	for (Object* object : _objects) {
 		_objectAllocator.destroy(object);
 	}
 	_objectAllocator.reset();
@@ -141,13 +141,13 @@ void Batch::draw(DrawStatePoolDef& statePool)
 		return;
 	}
 
-	auto& state = statePool.get();
+	const auto& state = statePool.get();
 
-	static StringId viewProjMatrixName = StringId("ViewProjectionMatrix");
-	auto& viewProjMatrix = state.get<glm::mat4>(viewProjMatrixName);
+	static const StringId viewProjMatrixName = StringId("ViewProjectionMatrix");
+	const auto& viewProjMatrix = state.get<glm::mat4>(viewProjMatrixName);
 
 	_culledObjects.clear();
-	for (auto& object : _objects)
+	for (Object* object : _objects)
 	{
 		if (object->isCaughtIntoView(viewProjMatrix)) {
 			_culledObjects.push_back(object);
@@ -164,8 +164,8 @@ void Batch::draw(DrawStatePoolDef& statePool)
 
 	int textureUnit = 0;
 	for (auto& texture : _textures) {
-		auto location = _shader->getLocation(texture.first);
-		if (location == -1) {
+		const auto location = _shader->getLocation(texture.first);
+		if (location == static_cast<unsigned int>(-1)) {
 			continue;
 		}
 
@@ -176,13 +176,13 @@ void Batch::draw(DrawStatePoolDef& statePool)
 
 	_state.apply(*_shader);
 
-	static StringId viewMatrixName = StringId("ViewMatrix");
-	auto& viewMatrix = state.get<glm::mat4>(viewMatrixName);
+	static const StringId viewMatrixName = StringId("ViewMatrix");
+	const auto& viewMatrix = state.get<glm::mat4>(viewMatrixName);
 
-	static StringId projMatrixName = StringId("ProjectionMatrix");
-	auto& projMatrix = state.get<glm::mat4>(projMatrixName);
+	static const StringId projMatrixName = StringId("ProjectionMatrix");
+	const auto& projMatrix = state.get<glm::mat4>(projMatrixName);
 
-	for (auto& object : _culledObjects)
+	for (Object* object : _culledObjects)
 	{
 		object->draw(_shader, viewMatrix, projMatrix);
 	}

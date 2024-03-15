@@ -4,7 +4,13 @@
 class IInputHandler
 {
 public:
-	virtual ~IInputHandler() {}
+	IInputHandler() = default;
+	IInputHandler(const IInputHandler& other) = delete;
+	IInputHandler(IInputHandler&& other) = delete;
+	IInputHandler& operator=(const IInputHandler& other) = delete;
+	IInputHandler& operator=(IInputHandler&& other) = delete;
+
+	virtual ~IInputHandler() = default;
 
 	virtual void init() = 0;
 	virtual void setMouseButtonCallback(const InputEvents::MouseButtonCallback& callback) = 0;

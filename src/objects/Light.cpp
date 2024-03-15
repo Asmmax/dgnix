@@ -22,7 +22,7 @@ std::vector<StringId>& Light::LightNames::getLightPosNames()
 std::vector<StringId> Light::LightNames::initLightPosNames()
 {
 	std::vector<StringId> lightPosNames;
-	static std::string nameTemplate = "PointLights";
+	static const std::string nameTemplate = "PointLights";
 
 	for (int i = 0; i < Light::MAX_LIGHT_COUNT; i++) {
 		std::string name(nameTemplate);
@@ -74,11 +74,11 @@ void Light::predraw(DrawStatePoolDef& statePool)
 {
 	auto& state = statePool.get();
 
-	static StringId viewMatrixName = StringId("ViewMatrix");
-	auto& viewMatrix = state.get<glm::mat4>(viewMatrixName);
-	glm::vec4 viewPosition = viewMatrix * glm::vec4(_position, 1.0f);
+	static const StringId viewMatrixName = StringId("ViewMatrix");
+	const auto& viewMatrix = state.get<glm::mat4>(viewMatrixName);
+	const glm::vec4 viewPosition = viewMatrix * glm::vec4(_position, 1.0f);
 
-	int id = nextFreeId(state);
+	const int id = nextFreeId(state);
 	if (id < 0) {
 		return;
 	}
@@ -93,11 +93,11 @@ void Light::predraw(DrawStatePoolDef& statePool)
 	state.add(_names->getRadiusName(), _radius);
 	state.add(_names->getFadingAreaName(), _fadingArea);
 
-	static StringId pointLightCountName = StringId("PointLightCount");
+	static const StringId pointLightCountName = StringId("PointLightCount");
 	state.addOrSet(pointLightCountName, id + 1);
 }
 
-int Light::nextFreeId(const DrawStateDef& state) const
+int Light::nextFreeId(const DrawStateDef& state)
 {
 	for (int i = 0; i < MAX_LIGHT_COUNT; i++) {
 

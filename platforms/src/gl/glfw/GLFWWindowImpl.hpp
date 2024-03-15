@@ -2,8 +2,6 @@
 #include "IWindowImpl.hpp"
 #include "GLFWGraphicsContext.hpp"
 #include "GLFWInputHandler.hpp"
-#include "../common/GLViewImpl.hpp"
-#include <vector>
 
 struct GLFWwindow;
 

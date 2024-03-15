@@ -26,7 +26,7 @@ void BBox::addPoint(const glm::vec3& point)
 
 BBox BBox::project(const glm::mat4& projMatrix) const
 {
-	std::array<glm::vec4, 8> vertices = {
+	const std::array<glm::vec4, 8> vertices = {
 		glm::vec4{xMin, yMin, zMin, 1.0f},
 		glm::vec4{xMin, yMin, zMax, 1.0f},
 		glm::vec4{xMin, yMax, zMin, 1.0f},

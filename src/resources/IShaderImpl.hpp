@@ -9,6 +9,12 @@
 class IShaderImpl
 {
 public:
+	IShaderImpl() = default;
+	IShaderImpl(const IShaderImpl& other) = delete;
+	IShaderImpl(IShaderImpl&& other) = delete;
+	IShaderImpl& operator=(const IShaderImpl& other) = delete;
+	IShaderImpl& operator=(IShaderImpl&& other) = delete;
+
 	virtual void compileVertexShader(const std::string& shader) = 0;
 	virtual void compileFragmentShader(const std::string& shader) = 0;
 	virtual void link() = 0;
@@ -29,5 +35,5 @@ public:
 	virtual unsigned int getLocation(const StringId& name) const = 0;
 
 protected:
-	virtual ~IShaderImpl() {}
+	virtual ~IShaderImpl() = default;
 };

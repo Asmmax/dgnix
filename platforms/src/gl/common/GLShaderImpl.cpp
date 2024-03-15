@@ -25,7 +25,7 @@ void GLShaderImpl::compileVertexShader(const std::string& shader)
 
 	const GLchar* shaderCode = shader.c_str();
 	const GLchar* codeArray[] = { shaderCode };
-	gl::ShaderSource(_vertexShaderHandle, 1, codeArray, NULL);
+	gl::ShaderSource(_vertexShaderHandle, 1, codeArray, nullptr);
 
 	gl::CompileShader(_vertexShaderHandle);
 
@@ -62,7 +62,7 @@ void GLShaderImpl::compileFragmentShader(const std::string& shader)
 
 	const GLchar* shaderCode = shader.c_str();
 	const GLchar* codeArray[] = { shaderCode };
-	gl::ShaderSource(_fragmentShaderHandle, 1, codeArray, NULL);
+	gl::ShaderSource(_fragmentShaderHandle, 1, codeArray, nullptr);
 
 	gl::CompileShader(_fragmentShaderHandle);
 

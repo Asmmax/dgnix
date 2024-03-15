@@ -1,7 +1,6 @@
 #include "Application.hpp"
 #include "Window.hpp"
 #include "IApplicationImpl.hpp"
-#include "GLFWApplicationImpl.hpp"
 #include <iostream>
 
 Application::StopWrapper::StopWrapper()
@@ -16,7 +15,7 @@ Application::StopWrapper::~StopWrapper()
     }
 }
 
-Application* Application::StopWrapper::get()
+Application* Application::StopWrapper::get() const
 {
     return _instance;
 }
@@ -71,14 +70,6 @@ Application::StopWrapper& Application::getStopWrapper()
 }
 #endif // _DEBUG
 
-template<typename Impl>
-void Application::bindImpl()
-{
-    clear();
-    _impl = std::make_unique<Impl>();
-    initGraphics();
-}
-
 Window* Application::getWindow(int width, int height, const std::string& title)
 {
     if (!_isValid)
@@ -98,12 +89,10 @@ Window* Application::getWindow(int width, int height, const std::string& title)
     return _window.get();
 }
 
-double Application::GetTime()
+double Application::GetTime() const
 {
     if (!_isValid || !_impl)
         return 0.0;
 
     return _impl->getTime();
 }
-
-template void Application::bindImpl<GLFWApplicationImpl>();

@@ -19,7 +19,7 @@ TextureData loadTexture(const std::string& fileName)
 
 	size_t dataSize = static_cast<size_t>(data.width) * data.height * data.bytesPerPixel;
 	data.data.resize(dataSize);
-	std::memcpy(&data.data[0], rawData, dataSize);
+	std::memcpy(data.data.data(), rawData, dataSize);
 
 	stbi_image_free(rawData);
 

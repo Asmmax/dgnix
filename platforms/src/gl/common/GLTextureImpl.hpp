@@ -9,7 +9,7 @@ private:
 	PoolAllocator<GLTextureImpl>* _allocator;
 
 public:
-	GLTextureImpl(PoolAllocator<GLTextureImpl>* allocator);
+	explicit GLTextureImpl(PoolAllocator<GLTextureImpl>* allocator);
 
 	void init() override;
 	void terminate() override;

@@ -24,17 +24,17 @@ Model::~Model()
 
 void Model::predraw(DrawStatePoolDef& statePool, const glm::mat4& viewMatrix, const glm::mat4& projMatrix) const
 {
-	glm::mat4 viewProjMat = projMatrix * viewMatrix;
+	const glm::mat4 viewProjMat = projMatrix * viewMatrix;
 
 	auto& currentState = statePool.get();
-	static StringId viewMatrixName = StringId("ViewMatrix");
+	static const StringId viewMatrixName = StringId("ViewMatrix");
 	currentState.add(viewMatrixName, viewMatrix);
-	static StringId projMatrixName = StringId("ProjectionMatrix");
+	static const StringId projMatrixName = StringId("ProjectionMatrix");
 	currentState.add(projMatrixName, projMatrix);
-	static StringId viewProjMatrixName = StringId("ViewProjectionMatrix");
+	static const StringId viewProjMatrixName = StringId("ViewProjectionMatrix");
 	currentState.add(viewProjMatrixName, viewProjMat);
 
-	for (auto& light : _lights) {
+	for (Light* light : _lights) {
 		light->predraw(statePool);
 	}
 
@@ -43,7 +43,7 @@ void Model::predraw(DrawStatePoolDef& statePool, const glm::mat4& viewMatrix, co
 
 void Model::draw(DrawStatePoolDef& statePool) const
 {
-	for (auto& batch : _batches) {
+	for (Batch* batch : _batches) {
 		statePool.push();
 		batch->draw(statePool);
 		statePool.pop();
@@ -55,7 +55,7 @@ Light* Model::createLight()
 	Light* newLight = _lightAllocator.allocate();
 	_lightAllocator.construct(newLight);
 
-	auto foundIt = std::lower_bound(_lights.begin(), _lights.end(), newLight);
+	const auto foundIt = std::lower_bound(_lights.begin(), _lights.end(), newLight);
 	_lights.insert(foundIt, newLight);
 
 	return newLight;
@@ -66,7 +66,7 @@ Batch* Model::createBatch()
 	Batch* newBatch = _batchAllocator.allocate();
 	_batchAllocator.construct(newBatch);
 
-	auto foundIt = std::lower_bound(_batches.begin(), _batches.end(), newBatch);
+	const auto foundIt = std::lower_bound(_batches.begin(), _batches.end(), newBatch);
 	_batches.insert(foundIt, newBatch);
 
 	return newBatch;
@@ -74,7 +74,7 @@ Batch* Model::createBatch()
 
 void Model::removeLight(Light* light)
 {
-	auto foundIt = std::lower_bound(_lights.begin(), _lights.end(), light);
+	const auto foundIt = std::lower_bound(_lights.begin(), _lights.end(), light);
 	if (*foundIt != light) {
 		return;
 	}
@@ -86,7 +86,7 @@ void Model::removeLight(Light* light)
 
 void Model::removeBatch(Batch* batch)
 {
-	auto foundIt = std::lower_bound(_batches.begin(), _batches.end(), batch);
+	const auto foundIt = std::lower_bound(_batches.begin(), _batches.end(), batch);
 	if (*foundIt != batch) {
 		return;
 	}

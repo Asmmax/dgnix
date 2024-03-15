@@ -26,7 +26,7 @@ void Mesh::updateData(const MeshData& data)
 	_indicesCount = data.indices.size();
 
 	_bounds = BBox();
-	for (auto& point : data.positions) {
+	for (const auto& point : data.positions) {
 		_bounds.addPoint(point.x, point.y, point.z);
 	}
 }

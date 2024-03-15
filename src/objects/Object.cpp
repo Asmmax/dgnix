@@ -25,12 +25,12 @@ bool Object::isCaughtIntoView(const glm::mat4& viewProjMatrix) const
 		return false;
 	}
 
-	auto mvpMatrix = viewProjMatrix * _matrix;
+	const auto mvpMatrix = viewProjMatrix * _matrix;
 
-	auto& bbox = _mesh->getBoundingBox();
-	BBox projectedBbox = bbox.project(mvpMatrix);
+	const auto& bbox = _mesh->getBoundingBox();
+	const BBox projectedBbox = bbox.project(mvpMatrix);
 
-	static BBox screenBbox = { -1.0f, -1.0f, 0.0f, 1.0f, 1.0f, 2.0f };
+	static const BBox screenBbox = { -1.0f, -1.0f, 0.0f, 1.0f, 1.0f, 2.0f };
 
 	return projectedBbox.isOverlapped(screenBbox, 1e-4f);
 }
@@ -41,33 +41,33 @@ void Object::draw(Shader* shader, const glm::mat4& viewMatrix, const glm::mat4& 
 		return;
 	}
 
-	auto mvMatrix = viewMatrix * _matrix;
-	auto mvpMatrix = projMatrix * mvMatrix;
+	const auto mvMatrix = viewMatrix * _matrix;
+	const auto mvpMatrix = projMatrix * mvMatrix;
 
-	auto normalMatrix4x4 = glm::transpose(glm::inverse(mvMatrix));
-	glm::mat3 normalMatrix(normalMatrix4x4);
+	const auto normalMatrix4x4 = glm::transpose(glm::inverse(mvMatrix));
+	const glm::mat3 normalMatrix(normalMatrix4x4);
 
-	static StringId modelMatrixName = StringId("ModelMatrix");
-	auto modelMatrixLocation = shader->getLocation(modelMatrixName);
-	if (modelMatrixLocation != -1) {
+	static const StringId modelMatrixName = StringId("ModelMatrix");
+	const auto modelMatrixLocation = shader->getLocation(modelMatrixName);
+	if (modelMatrixLocation != static_cast<unsigned int>(-1)) {
 		shader->setUniform(modelMatrixLocation, _matrix);
 	}
 
-	static StringId mvMatrixName = StringId("ModelViewMatrix");
-	auto mvMatrixLocation = shader->getLocation(mvMatrixName);
-	if (mvMatrixLocation != -1) {
+	static const StringId mvMatrixName = StringId("ModelViewMatrix");
+	const auto mvMatrixLocation = shader->getLocation(mvMatrixName);
+	if (mvMatrixLocation != static_cast<unsigned int>(-1)) {
 		shader->setUniform(mvMatrixLocation, mvMatrix);
 	}
 
-	static StringId mvpMatrixName = StringId("MVP");
-	auto mvpMatrixLocation = shader->getLocation(mvpMatrixName);
-	if (mvpMatrixLocation != -1) {
+	static const StringId mvpMatrixName = StringId("MVP");
+	const auto mvpMatrixLocation = shader->getLocation(mvpMatrixName);
+	if (mvpMatrixLocation != static_cast<unsigned int>(-1)) {
 		shader->setUniform(mvpMatrixLocation, mvpMatrix);
 	}
 
-	static StringId normalMatrixName = StringId("NormalMatrix");
-	auto normalMatrixLocation = shader->getLocation(normalMatrixName);
-	if (normalMatrixLocation != -1) {
+	static const StringId normalMatrixName = StringId("NormalMatrix");
+	const auto normalMatrixLocation = shader->getLocation(normalMatrixName);
+	if (normalMatrixLocation != static_cast<unsigned int>(-1)) {
 		shader->setUniform(normalMatrixLocation, normalMatrix);
 	}
 

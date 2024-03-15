@@ -14,8 +14,13 @@ private:
 	IShaderImpl* _impl;
 
 public:
-	Shader(IShaderImpl* shaderImpl);
+	explicit Shader(IShaderImpl* shaderImpl);
 	~Shader();
+
+	Shader(const Shader& other) = delete;
+	Shader(Shader&& other) = delete;
+	Shader& operator=(const Shader& other) = delete;
+	Shader& operator=(Shader&& other) = delete;
 
 	void init(const std::string& vertexShader, const std::string& fragmentShader);
 

@@ -20,8 +20,13 @@ private:
 	PoolAllocator<Object> _objectAllocator;
 
 public:
-	Batch(size_t poolSize = 100);
+	explicit Batch(size_t poolSize = 100);
 	~Batch();
+
+	Batch(const Batch& other) = delete;
+	Batch(Batch&& other) = delete;
+	Batch& operator=(const Batch& other) = delete;
+	Batch& operator=(Batch&& other) = delete;
 
 	DrawStateDef& getState() { return _state; }
 	const DrawStateDef& getState() const { return _state; }

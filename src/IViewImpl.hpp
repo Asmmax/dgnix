@@ -5,7 +5,13 @@
 class IViewImpl
 {
 public:
-	virtual ~IViewImpl() {}
+	IViewImpl() = default;
+	IViewImpl(const IViewImpl& other) = delete;
+	IViewImpl(IViewImpl&& other) = delete;
+	IViewImpl& operator=(const IViewImpl& other) = delete;
+	IViewImpl& operator=(IViewImpl&& other) = delete;
+
+	virtual ~IViewImpl() = default;
 
 	virtual void init(TextureId fboTextureId) = 0;
 	virtual void terminate() = 0;

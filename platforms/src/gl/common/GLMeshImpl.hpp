@@ -11,7 +11,7 @@ private:
 	PoolAllocator<GLMeshImpl>* _allocator;
 
 public:
-	GLMeshImpl(PoolAllocator<GLMeshImpl>* allocator);
+	explicit GLMeshImpl(PoolAllocator<GLMeshImpl>* allocator);
 
 	void init() override;
 	void terminate() override;

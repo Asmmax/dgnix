@@ -27,8 +27,13 @@ private:
 	PoolAllocator<Shader> _shaderAllocator;
 
 public:
-	Loader(ILoaderImpl* loaderImpl, size_t poolSize = 100);
+	explicit Loader(ILoaderImpl* loaderImpl, size_t poolSize = 100);
 	~Loader();
+
+	Loader(const Loader& other) = delete;
+	Loader(Loader&& other) = delete;
+	Loader& operator=(const Loader& other) = delete;
+	Loader& operator=(Loader&& other) = delete;
 
 	void init(IGraphicsContext* context);
 

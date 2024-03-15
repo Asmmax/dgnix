@@ -241,14 +241,14 @@ void DrawState<Types...>::apply(Shader& shader) const
 
 template<typename... Types>
 template<std::size_t... Is>
-void DrawState<Types...>::apply(Shader& shader, const std::tuple<UnorderedMap<StringId, Types>...>& tuple, std::index_sequence<Is...>) const
+void DrawState<Types...>::apply(Shader& shader, const std::tuple<UnorderedMap<StringId, Types>...>& tuple, std::index_sequence<Is...>)
 {
 	apply(shader, std::get<Is>(tuple)...);
 }
 
 template<typename... Types>
 template<typename CurrentType, typename... Remains>
-void DrawState<Types...>::apply(Shader& shader, const UnorderedMap<StringId, CurrentType>& currentMap, const UnorderedMap<StringId, Remains>&... remains) const
+void DrawState<Types...>::apply(Shader& shader, const UnorderedMap<StringId, CurrentType>& currentMap, const UnorderedMap<StringId, Remains>&... remains)
 {
 	apply(shader, currentMap);
 	apply(shader, remains...);
@@ -256,11 +256,11 @@ void DrawState<Types...>::apply(Shader& shader, const UnorderedMap<StringId, Cur
 
 template<typename... Types>
 template<typename Type>
-void DrawState<Types...>::apply(Shader& shader, const UnorderedMap<StringId, Type>& map) const
+void DrawState<Types...>::apply(Shader& shader, const UnorderedMap<StringId, Type>& map)
 {
 	for (size_t i = 0; i < map.size(); i++) {
 		auto location = shader.getLocation(map.keys()[i]);
-		if (location != -1) {
+		if (location != static_cast<unsigned int>(-1)) {
 			shader.setUniform(location, map.values()[i]);
 		}
 	}
@@ -278,14 +278,14 @@ void DrawState<Types...>::apply(DrawState& otherState) const
 
 template<typename... Types>
 template<std::size_t... Is>
-void DrawState<Types...>::apply(DrawState& otherState, const std::tuple<UnorderedMap<StringId, Types>...>& tuple, std::index_sequence<Is...>) const
+void DrawState<Types...>::apply(DrawState& otherState, const std::tuple<UnorderedMap<StringId, Types>...>& tuple, std::index_sequence<Is...>)
 {
 	apply(otherState, std::get<Is>(tuple)...);
 }
 
 template<typename... Types>
 template<typename CurrentType, typename... Remains>
-void DrawState<Types...>::apply(DrawState& otherState, const UnorderedMap<StringId, CurrentType>& currentMap, const UnorderedMap<StringId, Remains>&... remains) const
+void DrawState<Types...>::apply(DrawState& otherState, const UnorderedMap<StringId, CurrentType>& currentMap, const UnorderedMap<StringId, Remains>&... remains)
 {
 	apply(otherState, currentMap);
 	apply(otherState, remains...);
@@ -293,7 +293,7 @@ void DrawState<Types...>::apply(DrawState& otherState, const UnorderedMap<String
 
 template<typename... Types>
 template<typename Type>
-void DrawState<Types...>::apply(DrawState& otherState, const UnorderedMap<StringId, Type>& map) const
+void DrawState<Types...>::apply(DrawState& otherState, const UnorderedMap<StringId, Type>& map)
 {
 	for (size_t i = 0; i < map.size(); i++) {
 		otherState.add(map.keys()[i], map.values()[i]);
@@ -318,28 +318,27 @@ DrawStatePool<Types...>::DrawStatePool(size_t size) :
 template<typename... Types>
 DrawState<Types...>& DrawStatePool<Types...>::get()
 {
-	assert(_cursor != -1);
+	assert(_cursor != static_cast<size_t>(-1));
 	return _pool[_cursor];
 }
 
 template<typename... Types>
 void DrawStatePool<Types...>::push()
 {
-	assert(_cursor == -1 || _cursor < _pool.size() - 1);
+	assert(_cursor == static_cast<size_t>(-1) || _cursor < _pool.size() - 1);
 	_cursor++;
 }
 
 template<typename... Types>
 void DrawStatePool<Types...>::pop()
 {
-	assert(_cursor != -1);
+	assert(_cursor != static_cast<size_t>(-1));
 	_pool[_cursor].clear();
 	_cursor--;
 }
 
 template class DrawState<glm::mat4, glm::mat3, glm::vec4, glm::vec3, float, int>;
 template class DrawStatePool<glm::mat4, glm::mat3, glm::vec4, glm::vec3, float, int>;
-
 
 template void DrawState<glm::mat4, glm::mat3, glm::vec4, glm::vec3, float, int>::add(const StringId& name, const glm::mat4& value);
 template void DrawState<glm::mat4, glm::mat3, glm::vec4, glm::vec3, float, int>::add(const StringId& name, const glm::mat3& value);

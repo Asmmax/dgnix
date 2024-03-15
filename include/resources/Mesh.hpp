@@ -13,8 +13,13 @@ private:
 	
 
 public:
-	Mesh(IMeshImpl* meshImpl);
+	explicit Mesh(IMeshImpl* meshImpl);
 	~Mesh();
+
+	Mesh(const Mesh& other) = delete;
+	Mesh(Mesh&& other) = delete;
+	Mesh& operator=(const Mesh& other) = delete;
+	Mesh& operator=(Mesh&& other) = delete;
 
 	void init(const MeshData& data);
 	void updateData(const MeshData& data);
