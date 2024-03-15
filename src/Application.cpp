@@ -3,6 +3,8 @@
 #include "IApplicationImpl.hpp"
 #include <iostream>
 
+#ifdef _DEBUG
+
 Application::StopWrapper::StopWrapper()
 {
     _instance = new Application();
@@ -25,6 +27,8 @@ void Application::StopWrapper::stop()
     delete _instance;
     _instance = nullptr;
 }
+
+#endif
 
 Application::Application():
     _isValid(false)
