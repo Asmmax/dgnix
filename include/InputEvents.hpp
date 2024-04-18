@@ -165,5 +165,6 @@ namespace InputEvents {
 	using MouseMoveCallback = std::function<void(double, double)>;
 	using MouseScrollCallback = std::function<void(double)>;
 	using KeyCallback = std::function<void(KeyboardKey, KeyState, KeyMod)>;
+	using FocusCallback = std::function<void(bool)>;
 
 }

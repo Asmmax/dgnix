@@ -18,6 +18,7 @@ public:
 	virtual void setMouseMoveCallback(const InputEvents::MouseMoveCallback& callback) = 0;
 	virtual void setMouseScrollCallback(const InputEvents::MouseScrollCallback& callback) = 0;
 	virtual void setKeyCallback(const InputEvents::KeyCallback& callback) = 0;
+	virtual void setFocusCallback(const InputEvents::FocusCallback& callback) = 0;
 
 	virtual void captureMouse() = 0;
 	virtual void uncaptureMouse() = 0;

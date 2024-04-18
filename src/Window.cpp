@@ -58,6 +58,11 @@ Window::Window(IWindowImpl* impl):
 				_keyCallback(key, state, mod);
 			}
 			});
+		inputHandler->setFocusCallback([this](bool hasFocused) {
+			if (_focusCallback) {
+				_focusCallback(hasFocused);
+			}
+			});
 	}
 }
 

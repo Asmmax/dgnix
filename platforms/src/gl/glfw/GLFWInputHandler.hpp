@@ -12,6 +12,7 @@ private:
 	InputEvents::MouseMoveCallback _mouseMoveCallback;
 	InputEvents::MouseScrollCallback _mouseScrollCallback;
 	InputEvents::KeyCallback _keyCallback;
+	InputEvents::FocusCallback _focusCallback;
 
 public:
 	GLFWInputHandler(GLFWwindow* window);
@@ -22,6 +23,7 @@ public:
 	void setMouseMoveCallback(const InputEvents::MouseMoveCallback& callback) override { _mouseMoveCallback = callback; }
 	void setMouseScrollCallback(const InputEvents::MouseScrollCallback& callback) override { _mouseScrollCallback = callback; }
 	void setKeyCallback(const InputEvents::KeyCallback& callback) override { _keyCallback = callback; }
+	void setFocusCallback(const InputEvents::FocusCallback& callback) override { _focusCallback = callback; }
 
 	void captureMouse() override;
 	void uncaptureMouse() override;
@@ -31,4 +33,5 @@ private:
 	static void mousePositionCallback(GLFWwindow* window, double x, double y);
 	static void mouseScrollCallback(GLFWwindow* window, double xOffset, double yOffset);
 	static void keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods);
+	static void focusCallback(GLFWwindow* window, int focused);
 };

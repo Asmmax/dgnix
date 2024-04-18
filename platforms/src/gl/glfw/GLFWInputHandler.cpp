@@ -16,6 +16,7 @@ void GLFWInputHandler::init()
 	glfwSetCursorPosCallback(_window, mousePositionCallback);
 	glfwSetScrollCallback(_window, mouseScrollCallback);
 	glfwSetKeyCallback(_window, keyCallback);
+	glfwSetWindowFocusCallback(_window, focusCallback);
 }
 
 void GLFWInputHandler::captureMouse()
@@ -233,5 +234,13 @@ void GLFWInputHandler::keyCallback(GLFWwindow* window, int key, int scancode, in
 
 	if (handler->_keyCallback) {
 		handler->_keyCallback(keyboardKey, state, mod);
+	}
+}
+
+void GLFWInputHandler::focusCallback(GLFWwindow* window, int focused)
+{
+	auto* handler = static_cast<GLFWInputHandler*>(glfwGetWindowUserPointer(window));
+	if (handler->_focusCallback) {
+		handler->_focusCallback(focused == GLFW_TRUE);
 	}
 }

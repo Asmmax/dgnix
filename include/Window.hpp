@@ -28,6 +28,7 @@ private:
 	InputEvents::MouseMoveCallback _mouseMoveCallback;
 	InputEvents::MouseScrollCallback _mouseScrollCallback;
 	InputEvents::KeyCallback _keyCallback;
+	InputEvents::FocusCallback _focusCallback;
 	VoidCallback _preHandleCallback;
 
 	glm::vec3 _background;
@@ -65,6 +66,7 @@ public:
 	const glm::vec3& getBackground() const { return _background; }
 
 	void setPreHandleCallback(const VoidCallback& callback) { _preHandleCallback = callback; }
+	void setFocusCallback(const InputEvents::FocusCallback& callback) { _focusCallback = callback; }
 	void setMouseButtonCallback(const InputEvents::MouseButtonCallback& callback) { _mouseButtonCallback = callback; }
 	void setMouseButtonWithMoveCallback(const InputEvents::MouseButtonWithMoveCallback& callback) { _mouseButtonWithMoveCallback = callback; }
 	void setMouseMoveCallback(const InputEvents::MouseMoveCallback& callback) { _mouseMoveCallback = callback; }
