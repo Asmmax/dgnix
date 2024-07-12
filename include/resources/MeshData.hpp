@@ -7,6 +7,7 @@ struct MeshData
 {
 	std::vector<glm::vec3> positions;
 	std::vector<glm::vec3> normals;
+	std::vector<glm::vec3> tangents;
 	std::vector<glm::vec2> textureCoords;
 	std::vector<unsigned int> indices;
 
@@ -17,4 +18,4 @@ struct MeshData
 const float pi = 3.1415926536f;
 
 MeshData createTriangle(float size = 1.0f);
-MeshData createSphere(float radius = 1.0f, unsigned int segCount = 20, float fStart = -pi / 2, float fEnd = pi / 2);
+MeshData createSphere(float radius = 0.5f, int stacks = 8, int slices = 12);
