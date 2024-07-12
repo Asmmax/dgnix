@@ -9,6 +9,7 @@ void MeshData::addData(const MeshData& otherData, const glm::mat4& offset)
 	indices.reserve(indices.size() + otherData.indices.size());
 	positions.reserve(positions.size() + otherData.positions.size());
 	normals.reserve(normals.size() + otherData.normals.size());
+	textureCoords.reserve(textureCoords.size() + otherData.textureCoords.size());
 
 	for (auto index : otherData.indices) {
 		indices.emplace_back(static_cast<unsigned int>(positions.size()) + index);
@@ -21,6 +22,10 @@ void MeshData::addData(const MeshData& otherData, const glm::mat4& offset)
 	for (const auto& normal : otherData.normals) {
 		normals.emplace_back(normal);
 	}
+
+	for (const auto& texCoord : otherData.textureCoords) {
+		textureCoords.emplace_back(texCoord);
+	}
 }
 
 void MeshData::addData(const MeshData& otherData, const std::vector<glm::mat4>& offsets)
@@ -30,20 +35,23 @@ void MeshData::addData(const MeshData& otherData, const std::vector<glm::mat4>& 
 	indices.reserve(indices.size() + otherData.indices.size() * offsets.size());
 	positions.reserve(positions.size() + otherData.positions.size() * offsets.size());
 	normals.reserve(normals.size() + otherData.normals.size() * offsets.size());
+	textureCoords.reserve(textureCoords.size() + otherData.textureCoords.size() * offsets.size());
 
 	for (const auto& offset : offsets) {
 		for (auto index : otherData.indices) {
 			indices.emplace_back(static_cast<unsigned int>(positions.size()) + index);
 		}
 
-		positions.reserve(positions.size() + otherData.positions.size());
 		for (const auto& position : otherData.positions) {
 			positions.emplace_back(offset * glm::vec4(position, 1.0f));
 		}
 
-		normals.reserve(normals.size() + otherData.normals.size());
 		for (const auto& normal : otherData.normals) {
 			normals.emplace_back(normal);
+		}
+
+		for (const auto& texCoord : otherData.textureCoords) {
+			textureCoords.emplace_back(texCoord);
 		}
 	}
 }
@@ -62,6 +70,11 @@ MeshData createTriangle(float size)
     data.normals.emplace_back(0, 0, 1);
     data.normals.emplace_back(0, 0, 1);
 
+	data.textureCoords.reserve(3);
+	data.textureCoords.emplace_back(0.5f, 1);
+	data.textureCoords.emplace_back(1, 0);
+	data.textureCoords.emplace_back(0, 0);
+
     data.indices.reserve(3);
     data.indices.push_back(0);
     data.indices.push_back(1);
@@ -79,6 +92,7 @@ MeshData createSphere(float radius, unsigned int segCount, float fStart, float f
 	size_t V = segCount + 1;
 	size_t G = segCount * 2 + 1;
 	data.positions.resize(V * G);
+	data.textureCoords.resize(V * G);
 	int cnt = 0;
 	for (size_t i = 0; i < V; i++) {
 		const float phi = fStart + (fEnd - fStart) * i / (V - 1);
@@ -87,6 +101,7 @@ MeshData createSphere(float radius, unsigned int segCount, float fStart, float f
 			data.positions[cnt] = radius * glm::vec3(cos(phi) * cos(theta),
 				sin(phi),
 				cos(phi) * sin(theta));
+			data.textureCoords[cnt] = glm::vec2(theta / (2 * pi), phi / pi + 0.5f);
 			cnt++;
 		}
 	}

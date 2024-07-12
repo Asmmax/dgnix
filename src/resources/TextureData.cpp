@@ -11,7 +11,7 @@ TextureData loadTexture(const std::string& fileName)
 
 	stbi_set_flip_vertically_on_load(true);
 
-	unsigned char* rawData = stbi_load(fileName.c_str(), &data.width, &data.height, &data.bytesPerPixel, 4);
+	unsigned char* rawData = stbi_load(fileName.c_str(), &data.width, &data.height, &data.bytesPerPixel, 0);
 	if (rawData == nullptr) {
 		std::cerr << "Cannot open \"" << fileName << "\"\n";
 		return data;

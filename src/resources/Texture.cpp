@@ -6,7 +6,8 @@ Texture::Texture(ITextureImpl* textureImpl):
 	_impl(textureImpl),
 	_textureUnit(-1),
 	_width(0),
-	_height(0)
+	_height(0),
+	_bytesPerPixel(1)
 {
 }
 
@@ -42,6 +43,7 @@ void Texture::updateData(const TextureData& data)
 	_impl->updateData(data);
 	_width = data.width;
 	_height = data.height;
+	_bytesPerPixel = data.bytesPerPixel;
 }
 
 void Texture::resize(int width, int height)
@@ -50,7 +52,7 @@ void Texture::resize(int width, int height)
 		return;
 	}
 
-	_impl->resize(width, height);
+	_impl->resize(width, height, _bytesPerPixel);
 	_width = width;
 	_height = height;
 }

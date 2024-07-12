@@ -19,7 +19,7 @@ public:
 	void clear(int texUnit) override;
 
 	void updateData(const TextureData& data) override;
-	void resize(int width, int height) override;
+	void resize(int width, int height, int bytesPerPixel) override;
 
 	unsigned int getTextureHandle() const override { return _textureHandle; }
 };

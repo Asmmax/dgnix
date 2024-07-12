@@ -44,14 +44,48 @@ void GLTextureImpl::clear(int texUnit)
 	gl::BindTexture(gl::TEXTURE_2D, 0);
 }
 
-void GLTextureImpl::updateData(const TextureData& data)
+static GLint getGlInternalFormat(int bytesPerPixel)
 {
-	gl::BindTexture(gl::TEXTURE_2D, _textureHandle);
-	gl::TexImage2D(gl::TEXTURE_2D, 0, gl::RGBA, data.width, data.height, 0, gl::RGBA, gl::UNSIGNED_BYTE, data.data.empty() ? nullptr : data.data.data());
+	switch (bytesPerPixel) {
+	case 1:
+		return gl::R8;
+	case 2:
+		return gl::RG8;
+	case 3:
+		return gl::RGB;
+	case 4:
+		return gl::RGBA;
+	}
+	return 0;
 }
 
-void GLTextureImpl::resize(int width, int height)
+static GLint getGlFormat(int bytesPerPixel)
 {
+	switch (bytesPerPixel) {
+	case 1:
+		return gl::RED;
+	case 2:
+		return gl::RG;
+	case 3:
+		return gl::RGB;
+	case 4:
+		return gl::RGBA;
+	}
+	return 0;
+}
+
+void GLTextureImpl::updateData(const TextureData& data)
+{
+	const GLint internalFormat = getGlInternalFormat(data.bytesPerPixel);
+	const GLint format = getGlFormat(data.bytesPerPixel);
 	gl::BindTexture(gl::TEXTURE_2D, _textureHandle);
-	gl::TexImage2D(gl::TEXTURE_2D, 0, gl::RGBA, width, height, 0, gl::RGBA, gl::UNSIGNED_BYTE, nullptr);
+	gl::TexImage2D(gl::TEXTURE_2D, 0, internalFormat, data.width, data.height, 0, format, gl::UNSIGNED_BYTE, data.data.empty() ? nullptr : data.data.data());
+}
+
+void GLTextureImpl::resize(int width, int height, int bytesPerPixel)
+{
+	const GLint internalFormat = getGlInternalFormat(bytesPerPixel);
+	const GLint format = getGlFormat(bytesPerPixel);
+	gl::BindTexture(gl::TEXTURE_2D, _textureHandle);
+	gl::TexImage2D(gl::TEXTURE_2D, 0, internalFormat, width, height, 0, format, gl::UNSIGNED_BYTE, nullptr);
 }

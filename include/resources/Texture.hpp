@@ -11,6 +11,7 @@ private:
 	int _textureUnit;
 	int _width;
 	int _height;
+	int _bytesPerPixel;
 
 public:
 	explicit Texture(ITextureImpl* textureImpl);
