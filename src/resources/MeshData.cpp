@@ -5,6 +5,7 @@
 void MeshData::addData(const MeshData& otherData, const glm::mat4& offset)
 {
 	assert(static_cast<unsigned long int>(positions.size()) + static_cast<unsigned long int>(otherData.positions.size()) < static_cast<unsigned long int>(std::numeric_limits<unsigned int>::max()));
+	assert(primitiveSize == otherData.primitiveSize);
 
 	indices.reserve(indices.size() + otherData.indices.size());
 	positions.reserve(positions.size() + otherData.positions.size());
@@ -36,6 +37,7 @@ void MeshData::addData(const MeshData& otherData, const glm::mat4& offset)
 void MeshData::addData(const MeshData& otherData, const std::vector<glm::mat4>& offsets)
 {
 	assert(static_cast<unsigned long int>(positions.size()) + static_cast<unsigned long int>(otherData.positions.size()) * offsets.size() < static_cast<unsigned long int>(std::numeric_limits<unsigned int>::max()));
+	assert(primitiveSize == otherData.primitiveSize);
 
 	indices.reserve(indices.size() + otherData.indices.size() * offsets.size());
 	positions.reserve(positions.size() + otherData.positions.size() * offsets.size());
@@ -95,6 +97,8 @@ MeshData createTriangle(float size)
     data.indices.push_back(1);
     data.indices.push_back(2);
 
+	data.primitiveSize = 3;
+
     return data;
 }
 
@@ -113,12 +117,18 @@ MeshData createSphere(float radius, int stacks, int slices)
 		for (int j = 0; j <= slices; j++)
 		{
 			float u = static_cast<float>(j) / slices;
+			if (i == 0) {
+				u -= 0.5f / slices;
+			}
+			if (i == stacks) {
+				u += 0.5f / slices;
+			}
 			float theta = PI2 * u;
 
 			auto& normal = data.normals.emplace_back(glm::vec3(cos(phi) * cos(theta), sin(phi), cos(phi) * sin(theta)));
 			data.tangents.emplace_back(glm::vec3(sin(theta), 0.f, -cos(theta)));
 			data.positions.push_back(normal * radius);
-			data.textureCoords.push_back(glm::vec2(u, v));
+			data.textureCoords.push_back(glm::vec2(u * 2.0f, v));
 		}
 	}
 
@@ -142,6 +152,8 @@ MeshData createSphere(float radius, int stacks, int slices)
 			}
 		}
 	}
+
+	data.primitiveSize = 3;
 
 	return data;
 }

@@ -4,6 +4,7 @@
 #include <glm/vec3.hpp>
 
 GLMeshImpl::GLMeshImpl(PoolAllocator<GLMeshImpl>* allocator):
+	_mode(0),
 	_vaoHandle(0),
 	_allocator(allocator)
 {
@@ -65,7 +66,7 @@ void GLMeshImpl::draw(size_t indicesCount)
 {
 	gl::BindVertexArray(_vaoHandle);
 
-	gl::DrawElements(gl::TRIANGLES, static_cast<int>(indicesCount), gl::UNSIGNED_INT, nullptr);
+	gl::DrawElements(static_cast<GLenum>(_mode), static_cast<int>(indicesCount), gl::UNSIGNED_INT, nullptr);
 
 	gl::BindVertexArray(0);
 }
@@ -92,4 +93,23 @@ void GLMeshImpl::updateData(const MeshData& data)
 
 	gl::BindBuffer(gl::ARRAY_BUFFER, uvBufHandle);
 	gl::BufferData(gl::ARRAY_BUFFER, data.textureCoords.size() * sizeof(glm::vec2), data.textureCoords.data(), gl::STATIC_DRAW);
+
+	switch (data.primitiveSize)
+	{
+	case 1:
+		_mode = gl::POINTS;
+		break;
+	case 2:
+		_mode = gl::LINES;
+		break;
+	case 3:
+		_mode = gl::TRIANGLES;
+		break;
+	case 4:
+		_mode = gl::QUADS;
+		break;
+	default:
+		_mode = 0;
+		break;
+	}
 }

@@ -6,6 +6,7 @@
 class GLMeshImpl : public IMeshImpl
 {
 private:
+	unsigned int _mode;
 	unsigned int _vaoHandle;
 	std::vector<unsigned int> _vboHandles;
 	PoolAllocator<GLMeshImpl>* _allocator;
