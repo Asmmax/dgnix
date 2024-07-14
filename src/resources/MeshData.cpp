@@ -9,9 +9,9 @@ void MeshData::addData(const MeshData& otherData, const glm::mat4& offset)
 
 	indices.reserve(indices.size() + otherData.indices.size());
 	positions.reserve(positions.size() + otherData.positions.size());
+	textureCoords.reserve(textureCoords.size() + otherData.textureCoords.size());
 	normals.reserve(normals.size() + otherData.normals.size());
 	tangents.reserve(tangents.size() + otherData.tangents.size());
-	textureCoords.reserve(textureCoords.size() + otherData.textureCoords.size());
 
 	for (auto index : otherData.indices) {
 		indices.emplace_back(static_cast<unsigned int>(positions.size()) + index);
@@ -20,6 +20,10 @@ void MeshData::addData(const MeshData& otherData, const glm::mat4& offset)
 	for (const auto& position : otherData.positions) {
 		positions.emplace_back(offset * glm::vec4(position, 1.0f));
 	}
+
+	for (const auto& texCoord : otherData.textureCoords) {
+		textureCoords.emplace_back(texCoord);
+	}
 	
 	for (const auto& normal : otherData.normals) {
 		normals.emplace_back(normal);
@@ -27,10 +31,6 @@ void MeshData::addData(const MeshData& otherData, const glm::mat4& offset)
 
 	for (const auto& tangent : otherData.tangents) {
 		tangents.emplace_back(tangent);
-	}
-
-	for (const auto& texCoord : otherData.textureCoords) {
-		textureCoords.emplace_back(texCoord);
 	}
 }
 
@@ -41,9 +41,9 @@ void MeshData::addData(const MeshData& otherData, const std::vector<glm::mat4>& 
 
 	indices.reserve(indices.size() + otherData.indices.size() * offsets.size());
 	positions.reserve(positions.size() + otherData.positions.size() * offsets.size());
+	textureCoords.reserve(textureCoords.size() + otherData.textureCoords.size() * offsets.size());
 	normals.reserve(normals.size() + otherData.normals.size() * offsets.size());
 	tangents.reserve(tangents.size() + otherData.tangents.size() * offsets.size());
-	textureCoords.reserve(textureCoords.size() + otherData.textureCoords.size() * offsets.size());
 
 	for (const auto& offset : offsets) {
 		for (auto index : otherData.indices) {
@@ -54,16 +54,16 @@ void MeshData::addData(const MeshData& otherData, const std::vector<glm::mat4>& 
 			positions.emplace_back(offset * glm::vec4(position, 1.0f));
 		}
 
+		for (const auto& texCoord : otherData.textureCoords) {
+			textureCoords.emplace_back(texCoord);
+		}
+
 		for (const auto& normal : otherData.normals) {
 			normals.emplace_back(normal);
 		}
 
 		for (const auto& tangent : otherData.tangents) {
 			tangents.emplace_back(tangent);
-		}
-
-		for (const auto& texCoord : otherData.textureCoords) {
-			textureCoords.emplace_back(texCoord);
 		}
 	}
 }
@@ -77,6 +77,11 @@ MeshData createTriangle(float size)
     data.positions.emplace_back(size / 2, -size / 2, 0);
     data.positions.emplace_back(-size / 2, -size / 2, 0);
 
+	data.textureCoords.reserve(3);
+	data.textureCoords.emplace_back(0.5f, 1);
+	data.textureCoords.emplace_back(1, 0);
+	data.textureCoords.emplace_back(0, 0);
+
     data.normals.reserve(3);
     data.normals.emplace_back(0, 0, 1);
     data.normals.emplace_back(0, 0, 1);
@@ -86,11 +91,6 @@ MeshData createTriangle(float size)
 	data.tangents.emplace_back(1, 0, 0);
 	data.tangents.emplace_back(1, 0, 0);
 	data.tangents.emplace_back(1, 0, 0);
-
-	data.textureCoords.reserve(3);
-	data.textureCoords.emplace_back(0.5f, 1);
-	data.textureCoords.emplace_back(1, 0);
-	data.textureCoords.emplace_back(0, 0);
 
     data.indices.reserve(3);
     data.indices.push_back(0);

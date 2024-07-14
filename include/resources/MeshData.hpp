@@ -6,9 +6,9 @@
 struct MeshData
 {
 	std::vector<glm::vec3> positions;
+	std::vector<glm::vec2> textureCoords;
 	std::vector<glm::vec3> normals;
 	std::vector<glm::vec3> tangents;
-	std::vector<glm::vec2> textureCoords;
 	std::vector<unsigned int> indices;
 	unsigned int primitiveSize = 3;
 

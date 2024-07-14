@@ -16,9 +16,9 @@ void GLMeshImpl::init()
 	gl::GenBuffers(5, _vboHandles.data());
 
 	const GLuint posBufHandle = _vboHandles[0];
-	const GLuint normBufHandle = _vboHandles[1];
-	const GLuint tangBufHandle = _vboHandles[2];
-	const GLuint uvBufHandle = _vboHandles[3];
+	const GLuint uvBufHandle = _vboHandles[1];
+	const GLuint normBufHandle = _vboHandles[2];
+	const GLuint tangBufHandle = _vboHandles[3];
 	const GLuint elemBufHandle = _vboHandles[4];
 
 	gl::GenVertexArrays(1, &_vaoHandle);
@@ -34,14 +34,14 @@ void GLMeshImpl::init()
 	gl::BindBuffer(gl::ARRAY_BUFFER, posBufHandle);
 	gl::VertexAttribPointer(0, 3, gl::FLOAT, gl::FALSE_, 0, nullptr);
 
-	gl::BindBuffer(gl::ARRAY_BUFFER, normBufHandle);
-	gl::VertexAttribPointer(1, 3, gl::FLOAT, gl::FALSE_, 0, nullptr);
+	gl::BindBuffer(gl::ARRAY_BUFFER, uvBufHandle);
+	gl::VertexAttribPointer(1, 2, gl::FLOAT, gl::FALSE_, 0, nullptr);
 
-	gl::BindBuffer(gl::ARRAY_BUFFER, tangBufHandle);
+	gl::BindBuffer(gl::ARRAY_BUFFER, normBufHandle);
 	gl::VertexAttribPointer(2, 3, gl::FLOAT, gl::FALSE_, 0, nullptr);
 
-	gl::BindBuffer(gl::ARRAY_BUFFER, uvBufHandle);
-	gl::VertexAttribPointer(3, 2, gl::FLOAT, gl::FALSE_, 0, nullptr);
+	gl::BindBuffer(gl::ARRAY_BUFFER, tangBufHandle);
+	gl::VertexAttribPointer(3, 3, gl::FLOAT, gl::FALSE_, 0, nullptr);
 
 	gl::BindVertexArray(0);
 }
@@ -74,9 +74,9 @@ void GLMeshImpl::draw(size_t indicesCount)
 void GLMeshImpl::updateData(const MeshData& data)
 {
 	const GLuint posBufHandle = _vboHandles[0];
-	const GLuint normBufHandle = _vboHandles[1];
-	const GLuint tangBufHandle = _vboHandles[2];
-	const GLuint uvBufHandle = _vboHandles[3];
+	const GLuint uvBufHandle = _vboHandles[1];
+	const GLuint normBufHandle = _vboHandles[2];
+	const GLuint tangBufHandle = _vboHandles[3];
 	const GLuint elemBufHandle = _vboHandles[4];
 
 	gl::BindBuffer(gl::ELEMENT_ARRAY_BUFFER, elemBufHandle);
@@ -85,14 +85,14 @@ void GLMeshImpl::updateData(const MeshData& data)
 	gl::BindBuffer(gl::ARRAY_BUFFER, posBufHandle);
 	gl::BufferData(gl::ARRAY_BUFFER, data.positions.size() * sizeof(glm::vec3), data.positions.data(), gl::STATIC_DRAW);
 
+	gl::BindBuffer(gl::ARRAY_BUFFER, uvBufHandle);
+	gl::BufferData(gl::ARRAY_BUFFER, data.textureCoords.size() * sizeof(glm::vec2), data.textureCoords.data(), gl::STATIC_DRAW);
+
 	gl::BindBuffer(gl::ARRAY_BUFFER, normBufHandle);
 	gl::BufferData(gl::ARRAY_BUFFER, data.normals.size() * sizeof(glm::vec3), data.normals.data(), gl::STATIC_DRAW);
 
 	gl::BindBuffer(gl::ARRAY_BUFFER, tangBufHandle);
 	gl::BufferData(gl::ARRAY_BUFFER, data.tangents.size() * sizeof(glm::vec3), data.tangents.data(), gl::STATIC_DRAW);
-
-	gl::BindBuffer(gl::ARRAY_BUFFER, uvBufHandle);
-	gl::BufferData(gl::ARRAY_BUFFER, data.textureCoords.size() * sizeof(glm::vec2), data.textureCoords.data(), gl::STATIC_DRAW);
 
 	switch (data.primitiveSize)
 	{
