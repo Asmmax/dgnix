@@ -4,9 +4,9 @@
 class GLViewImpl : public IViewImpl
 {
 private:
-	unsigned int _fboTextureId;
-	unsigned int _fboId;
-	unsigned int _fboDepthBufferId;
+	TextureId _fboTextureId;
+	BufferId _fboId;
+	BufferId _fboDepthBufferId;
 
 public:
 	GLViewImpl();
@@ -14,7 +14,8 @@ public:
 	void init(TextureId fboTextureId) override;
 	void terminate() override;
 
-	void beginDraw(int width, int height, const glm::vec3& background) override;
+	void beginDraw() override;
 	void endDraw() override;
 	void resizeBuffer(int width, int height) override;
+	BufferId getFrameBufferId() const { return _fboId; }
 };

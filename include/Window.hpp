@@ -22,6 +22,7 @@ private:
 	IWindowImpl* _impl;
 	std::vector<View*> _views;
 	std::unique_ptr<Loader> _loader;
+	View* _mainView;
 
 	InputEvents::MouseButtonCallback _mouseButtonCallback;
 	InputEvents::MouseButtonWithMoveCallback _mouseButtonWithMoveCallback;
@@ -30,10 +31,6 @@ private:
 	InputEvents::KeyCallback _keyCallback;
 	InputEvents::FocusCallback _focusCallback;
 	VoidCallback _preHandleCallback;
-
-	glm::vec3 _background;
-	glm::mat4 _viewMatrix;
-	DrawStatePoolDef _statePool;
 
 public:
 	~Window();
@@ -47,23 +44,17 @@ public:
 	void handle();
 	View* creteView(Texture* fboTexture);
 	void releaseView(const View* view);
+	void setMainView(View* view);
 	Loader* getLoader();
 
-	void prepareRender();
-	void render(const Model* model);
-	void setupImgui();
-	void renderImgui();
+	void getFrameSize(int& width, int& height) const;
+
+	void render();
 	void setVSync(bool enabled);
 	void setFullscreen(int width, int height, int framerate);
 	int getFramerate() const;
 	void setWindowed();
 	void swapBuffers();
-
-	void setViewMatrix(const glm::mat4& matrix) { _viewMatrix = matrix; }
-	const glm::mat4& getViewMatrix() const { return _viewMatrix; }
-
-	void setBackground(const glm::vec3& color) { _background = color; }
-	const glm::vec3& getBackground() const { return _background; }
 
 	void setPreHandleCallback(const VoidCallback& callback) { _preHandleCallback = callback; }
 	void setFocusCallback(const InputEvents::FocusCallback& callback) { _focusCallback = callback; }

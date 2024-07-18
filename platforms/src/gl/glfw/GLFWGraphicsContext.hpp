@@ -16,12 +16,14 @@ public:
 	void init() override;
 	void terminate() override;
 	void makeCurrent() override;
-	ISize getFramebufferSize() override;
+	void getFrameSize(int& width, int& height) const override;
 
-	void resizeBuffer() override;
-	void clearBuffer(const glm::vec3& background) override;
+	void setViewport(int width, int height) override;
+	void clear(const glm::vec3& background, bool withDepth) override;
+	void clearDepth() override;
 	void setupImgui() override;
 	void renderImgui() override;
+	void copyBuffer(BufferId srcId, int srcWidth, int srcHeight, BufferId dstId, int dstWidth, int dstHeight) override;
 	void swapInterval(int frameCount) override;
 	void swapBuffers() override;
 

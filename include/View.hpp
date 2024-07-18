@@ -1,5 +1,6 @@
 #pragma once
 #include "DrawState.hpp"
+#include "BufferId.hpp"
 #include <glm/vec3.hpp>
 #include <glm/mat4x4.hpp>
 
@@ -16,11 +17,10 @@ private:
 	Texture* _fboTexture;
 	int _width;
 	int _height;
-	glm::vec3 _background;
-	glm::mat4 _matrix;
 	DrawStatePoolDef _statePool;
 
 	bool _isResized;
+	bool _isRendering;
 
 public:
 	View(IViewImpl* viewImpl, Texture* fboTexture);
@@ -32,16 +32,16 @@ public:
 	View& operator=(View&& other) = delete;
 
 	void init(IGraphicsContext* context);
-	void render(const Model* model);
+	void beginRender(const glm::vec3& background = glm::vec3());
+	void render(const Model* model, const glm::mat4& viewMatrix, const glm::mat4& projMatrix, bool isBackground = false);
+	void setupImgui();
+	void renderImgui();
+	void endRender();
 	void setSize(int width, int height);
 
-	void setMatrix(const glm::mat4& matrix) { _matrix = matrix; }
-	const glm::mat4& getMatrix() const { return _matrix; }
+	void copyBuffer(BufferId dstId, int dstWidth, int dstHeight);
 
 	Texture* getFboTexture() const { return _fboTexture; }
-
-	void setBackground(const glm::vec3& color) { _background = color; }
-	const glm::vec3& getBackground() const { return _background; }
 
 private:
 	void resizeBuffer();

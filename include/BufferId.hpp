@@ -2,12 +2,12 @@
 #include <type_traits>
 #include <cstdint>
 
-struct TextureId
+struct BufferId
 {
 	unsigned int value;
 
-	TextureId() : value(0) {}
-	explicit TextureId(unsigned int id): value(id) {}
+	BufferId() : value(0) {}
+	explicit BufferId(unsigned int id) : value(id) {}
 	operator unsigned int() const { return value; }
 	operator bool() const { return value != 0; }
 };

@@ -6,7 +6,6 @@
 #include "Loader.hpp"
 #include "View.hpp"
 #include "Model.hpp"
-#include "imgui.h"
 #include <glm/glm.hpp>
 #include <glm/ext/matrix_clip_space.hpp>
 
@@ -26,9 +25,7 @@ void Window::uncaptureMouse()
 
 Window::Window(IWindowImpl* impl):
 	_impl(impl),
-	_background(0.0f, 0.0f, 0.0f),
-	_viewMatrix(),
-	_statePool(10)
+	_mainView(nullptr)
 {
 	_impl->init();
 
@@ -112,11 +109,21 @@ View* Window::creteView(Texture* fboTexture)
 
 void Window::releaseView(const View* view)
 {
+	if (_mainView == view) {
+		_mainView = nullptr;
+	}
+
 	const auto foundIt = std::find(_views.begin(), _views.end(), view);
 	if (foundIt != _views.end()) {
 		delete* foundIt;
 		_views.erase(foundIt);
 	}
+}
+
+void Window::setMainView(View* view)
+{
+	assert(std::find(_views.begin(), _views.end(), view) != _views.end());
+	_mainView = view;
 }
 
 Loader* Window::getLoader()
@@ -138,61 +145,37 @@ Loader* Window::getLoader()
 	return _loader.get();
 }
 
-void Window::prepareRender()
+void Window::getFrameSize(int& width, int& height) const
+{
+	auto graphicsContext = _impl->getGraphicsContext();
+	if (!graphicsContext) {
+		return;
+	}
+	graphicsContext->getFrameSize(width, height);
+}
+
+void Window::render()
 {
 	auto graphicsContext = _impl->getGraphicsContext();
 	if (!graphicsContext) {
 		return;
 	}
 	graphicsContext->makeCurrent();
-	graphicsContext->resizeBuffer();
-	graphicsContext->clearBuffer(_background);
-}
 
-void Window::render(const Model* model)
-{
-	auto graphicsContext = _impl->getGraphicsContext();
-	if (!graphicsContext) {
+	int frameWidth = 0;
+	int frameHeight = 0;
+	graphicsContext->getFrameSize(frameWidth, frameHeight);
+	if (frameWidth == 0 || frameHeight == 0) {
 		return;
 	}
 
-	const auto size = graphicsContext->getFramebufferSize();
-	if (size.width == 0 || size.height == 0) {
+	if (!_mainView) {
+		graphicsContext->setViewport(frameWidth, frameHeight);
+		graphicsContext->clear(glm::vec3(0.0));
 		return;
 	}
 
-	_statePool.push();
-
-	const glm::mat4 projMat = glm::perspective(45.0f, size.width / (float)size.height, 0.01f, 1000.0f);
-
-	if (model) {
-		model->predraw(_statePool, _viewMatrix, projMat);
-		model->draw(_statePool);
-	}
-
-	_statePool.pop();
-}
-
-void Window::setupImgui()
-{
-	auto graphicsContext = _impl->getGraphicsContext();
-	if (!graphicsContext) {
-		return;
-	}
-
-	graphicsContext->setupImgui();
-	ImGui::NewFrame();
-}
-
-void Window::renderImgui()
-{
-	auto graphicsContext = _impl->getGraphicsContext();
-	if (!graphicsContext) {
-		return;
-	}
-
-	ImGui::Render();
-	graphicsContext->renderImgui();
+	_mainView->copyBuffer(BufferId(), frameWidth, frameHeight);
 }
 
 void Window::setVSync(bool enabled)

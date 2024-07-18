@@ -1,4 +1,5 @@
 #pragma once
+#include "BufferId.hpp"
 #include <glm/vec3.hpp>
 
 class ILoaderImpl;
@@ -6,12 +7,6 @@ class ILoaderImpl;
 class IGraphicsContext
 {
 public:
-	struct ISize
-	{
-		int width = 1;
-		int height = 1;
-	};
-
 	IGraphicsContext() = default;
 	IGraphicsContext(const IGraphicsContext& other) = delete;
 	IGraphicsContext(IGraphicsContext&& other) = delete;
@@ -23,12 +18,14 @@ public:
 	virtual void init() = 0;
 	virtual void terminate() = 0;
 	virtual void makeCurrent() = 0;
-	virtual ISize getFramebufferSize() = 0;
+	virtual void getFrameSize(int& width, int& height) const = 0;
 
-	virtual void resizeBuffer() = 0;
-	virtual void clearBuffer(const glm::vec3& background) = 0;
+	virtual void setViewport(int width, int height) = 0;
+	virtual void clear(const glm::vec3& background, bool withDepth = true) = 0;
+	virtual void clearDepth() = 0;
 	virtual void setupImgui() = 0;
 	virtual void renderImgui() = 0;
+	virtual void copyBuffer(BufferId srcId, int srcWidth, int srcHeight, BufferId dstId, int dstWidth, int dstHeightt) = 0;
 	virtual void swapInterval(int frameCount) = 0;
 	virtual void swapBuffers() = 0;
 

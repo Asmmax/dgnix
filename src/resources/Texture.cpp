@@ -57,6 +57,11 @@ void Texture::resize(int width, int height)
 	_height = height;
 }
 
+TextureData Texture::getData() const
+{
+	return _impl->getData(_width, _height, _bytesPerPixel);
+}
+
 TextureId Texture::getId() const
 {
 	return _impl->getTextureHandle();

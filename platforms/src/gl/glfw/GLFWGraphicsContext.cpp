@@ -45,23 +45,29 @@ void GLFWGraphicsContext::makeCurrent()
 	}
 }
 
-GLFWGraphicsContext::ISize GLFWGraphicsContext::getFramebufferSize()
+void GLFWGraphicsContext::getFrameSize(int& width, int& height) const
 {
-	ISize size;
-	glfwGetFramebufferSize(_window, &size.width, &size.height);
-	return size;
+	glfwGetFramebufferSize(_window, &width, &height);
 }
 
-void GLFWGraphicsContext::resizeBuffer()
+void GLFWGraphicsContext::setViewport(int width, int height)
 {
-	auto size = getFramebufferSize();
-	gl::Viewport(0, 0, size.width, size.height);
+	gl::Viewport(0, 0, width, height);
 }
 
-void GLFWGraphicsContext::clearBuffer(const glm::vec3& background)
+void GLFWGraphicsContext::clear(const glm::vec3& background, bool withDepth)
 {
 	gl::ClearColor(background.r, background.g, background.b, 1.0f);
-	gl::Clear(gl::COLOR_BUFFER_BIT | gl::DEPTH_BUFFER_BIT);
+	GLbitfield mask = gl::COLOR_BUFFER_BIT;
+	if (withDepth) {
+		mask |= gl::DEPTH_BUFFER_BIT;
+	}
+	gl::Clear(mask);
+}
+
+void GLFWGraphicsContext::clearDepth()
+{
+	gl::Clear(gl::DEPTH_BUFFER_BIT);
 }
 
 void GLFWGraphicsContext::setupImgui()
@@ -73,6 +79,22 @@ void GLFWGraphicsContext::setupImgui()
 void GLFWGraphicsContext::renderImgui()
 {
 	ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+}
+
+void GLFWGraphicsContext::copyBuffer(BufferId srcId, int srcWidth, int srcHeight, BufferId dstId, int dstWidth, int dstHeight)
+{
+	gl::BindFramebuffer(gl::READ_FRAMEBUFFER, srcId);
+	gl::BindFramebuffer(gl::DRAW_FRAMEBUFFER, dstId);
+
+	gl::BlitFramebuffer(
+		0, 0, srcWidth, srcHeight,
+		0, 0, dstWidth, dstHeight,
+		gl::COLOR_BUFFER_BIT,
+		gl::NEAREST
+	);
+
+	gl::BindFramebuffer(gl::READ_FRAMEBUFFER, 0);
+	gl::BindFramebuffer(gl::DRAW_FRAMEBUFFER, 0);
 }
 
 void GLFWGraphicsContext::swapInterval(int frameCount)

@@ -10,7 +10,7 @@ GLTextureImpl::GLTextureImpl(PoolAllocator<GLTextureImpl>* allocator):
 
 void GLTextureImpl::init()
 {
-	gl::GenTextures(1, &_textureHandle);
+	gl::GenTextures(1, &_textureHandle.value);
 
 	gl::BindTexture(gl::TEXTURE_2D, _textureHandle);
 	gl::TexParameteri(gl::TEXTURE_2D, gl::TEXTURE_MAG_FILTER, gl::LINEAR);
@@ -21,8 +21,8 @@ void GLTextureImpl::init()
 
 void GLTextureImpl::terminate()
 {
-	gl::DeleteTextures(1, &_textureHandle);
-	_textureHandle = 0;
+	gl::DeleteTextures(1, &_textureHandle.value);
+	_textureHandle.value = 0;
 }
 
 void GLTextureImpl::free()
@@ -88,4 +88,21 @@ void GLTextureImpl::resize(int width, int height, int bytesPerPixel)
 	const GLint format = getGlFormat(bytesPerPixel);
 	gl::BindTexture(gl::TEXTURE_2D, _textureHandle);
 	gl::TexImage2D(gl::TEXTURE_2D, 0, internalFormat, width, height, 0, format, gl::UNSIGNED_BYTE, nullptr);
+}
+
+TextureData GLTextureImpl::getData(int width, int height, int bytesPerPixel)
+{
+	TextureData data;
+	data.width = width;
+	data.height = height;
+	data.bytesPerPixel = bytesPerPixel;
+	const size_t dataSize = static_cast<size_t>(width) * static_cast<size_t>(height) * static_cast<size_t>(bytesPerPixel);
+	data.data.resize(dataSize);
+
+	gl::BindTexture(gl::TEXTURE_2D, _textureHandle);
+
+	const GLint format = getGlFormat(bytesPerPixel);
+	gl::GetTexImage(gl::TEXTURE_2D, 0, format, gl::UNSIGNED_BYTE, data.data.data());
+
+	return data;
 }

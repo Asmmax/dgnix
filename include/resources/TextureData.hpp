@@ -10,4 +10,5 @@ struct TextureData
 	std::vector<unsigned char> data;
 };
 
-TextureData loadTexture(const std::string& fileName);
+TextureData readTexture(const std::string& fileName);
+bool writeTexture(const std::string& fileName, const TextureData& data);

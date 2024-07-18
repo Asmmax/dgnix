@@ -1,4 +1,6 @@
 #pragma once
+#include "resources/TextureId.hpp"
+#include <string>
 
 struct TextureData;
 
@@ -21,7 +23,9 @@ public:
 	virtual void updateData(const TextureData& data) = 0;
 	virtual void resize(int width, int height, int bytesPerPixel) = 0;
 
-	virtual unsigned int getTextureHandle() const = 0;
+	virtual TextureId getTextureHandle() const = 0;
+
+	virtual TextureData getData(int width, int height, int bytesPerPixel) = 0;
 
 protected:
 	virtual ~ITextureImpl() = default;

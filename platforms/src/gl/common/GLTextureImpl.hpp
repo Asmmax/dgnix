@@ -5,7 +5,7 @@
 class GLTextureImpl : public ITextureImpl
 {
 private:
-	unsigned int _textureHandle;
+	TextureId _textureHandle;
 	PoolAllocator<GLTextureImpl>* _allocator;
 
 public:
@@ -21,5 +21,7 @@ public:
 	void updateData(const TextureData& data) override;
 	void resize(int width, int height, int bytesPerPixel) override;
 
-	unsigned int getTextureHandle() const override { return _textureHandle; }
+	TextureId getTextureHandle() const override { return _textureHandle; }
+
+	TextureData getData(int width, int height, int bytesPerPixel) override;
 };

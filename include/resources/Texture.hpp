@@ -1,5 +1,6 @@
 #pragma once
 #include "TextureId.hpp"
+#include <string>
 
 class ITextureImpl;
 struct TextureData;
@@ -28,6 +29,7 @@ public:
 
 	void updateData(const TextureData& data);
 	void resize(int width, int height);
+	TextureData getData() const;
 
 	TextureId getId() const;
 	int getWidth() const { return _width; }
