@@ -126,6 +126,11 @@ void Window::setMainView(View* view)
 	_mainView = view;
 }
 
+bool Window::isMainView(const View* view) const
+{
+	return _mainView == view;
+}
+
 Loader* Window::getLoader()
 {
 	if (!_loader) {

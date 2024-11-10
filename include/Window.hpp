@@ -45,6 +45,7 @@ public:
 	View* creteView(Texture* fboTexture);
 	void releaseView(const View* view);
 	void setMainView(View* view);
+	bool isMainView(const View* view) const;
 	Loader* getLoader();
 
 	void getFrameSize(int& width, int& height) const;
