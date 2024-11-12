@@ -1,20 +1,27 @@
 #include "Model.hpp"
 #include "objects/Batch.hpp"
-#include "objects/Light.hpp"
+#include "objects/DirectLight.hpp"
+#include "objects/PointLight.hpp"
 #include <algorithm>
 
 Model::Model(size_t poolSize /*= 100*/):
-	_lightAllocator(poolSize),
+	_directLightAllocator(poolSize),
+	_pointLightAllocator(poolSize),
 	_batchAllocator(poolSize)
 {
-	_lights.reserve(poolSize);
+	_directLights.reserve(poolSize);
+	_pointLights.reserve(poolSize);
 	_batches.reserve(poolSize);
 }
 
 Model::~Model()
 {
-	for (auto& light : _lights) {
-		_lightAllocator.destroy(light);
+	for (auto& light : _directLights) {
+		_directLightAllocator.destroy(light);
+	}
+
+	for (auto& light : _pointLights) {
+		_pointLightAllocator.destroy(light);
 	}
 
 	for (auto& batch : _batches) {
@@ -34,7 +41,17 @@ void Model::predraw(DrawStatePoolDef& statePool, const glm::mat4& viewMatrix, co
 	static const StringId viewProjMatrixName = StringId("ViewProjectionMatrix");
 	currentState.add(viewProjMatrixName, viewProjMat);
 
-	for (Light* light : _lights) {
+	static const StringId directLightCountName = StringId("DirectLightCount");
+	currentState.addOrSet(directLightCountName, 0);
+
+	for (DirectLight* light : _directLights) {
+		light->predraw(statePool);
+	}
+
+	static const StringId pointLightCountName = StringId("PointLightCount");
+	currentState.addOrSet(pointLightCountName, 0);
+
+	for (PointLight* light : _pointLights) {
 		light->predraw(statePool);
 	}
 
@@ -50,13 +67,24 @@ void Model::draw(DrawStatePoolDef& statePool) const
 	}
 }
 
-Light* Model::createLight()
+DirectLight* Model::createDirectLight()
 {
-	Light* newLight = _lightAllocator.allocate();
-	_lightAllocator.construct(newLight);
+	DirectLight* newLight = _directLightAllocator.allocate();
+	_directLightAllocator.construct(newLight);
 
-	const auto foundIt = std::lower_bound(_lights.begin(), _lights.end(), newLight);
-	_lights.insert(foundIt, newLight);
+	const auto foundIt = std::lower_bound(_directLights.begin(), _directLights.end(), newLight);
+	_directLights.insert(foundIt, newLight);
+
+	return newLight;
+}
+
+PointLight* Model::createPointLight()
+{
+	PointLight* newLight = _pointLightAllocator.allocate();
+	_pointLightAllocator.construct(newLight);
+
+	const auto foundIt = std::lower_bound(_pointLights.begin(), _pointLights.end(), newLight);
+	_pointLights.insert(foundIt, newLight);
 
 	return newLight;
 }
@@ -72,16 +100,28 @@ Batch* Model::createBatch()
 	return newBatch;
 }
 
-void Model::removeLight(Light* light)
+void Model::removeDirectLight(DirectLight* light)
 {
-	const auto foundIt = std::lower_bound(_lights.begin(), _lights.end(), light);
+	const auto foundIt = std::lower_bound(_directLights.begin(), _directLights.end(), light);
 	if (*foundIt != light) {
 		return;
 	}
 
-	_lights.erase(foundIt);
-	_lightAllocator.destroy(light);
-	_lightAllocator.deallocate(light);
+	_directLights.erase(foundIt);
+	_directLightAllocator.destroy(light);
+	_directLightAllocator.deallocate(light);
+}
+
+void Model::removePointLight(PointLight* light)
+{
+	const auto foundIt = std::lower_bound(_pointLights.begin(), _pointLights.end(), light);
+	if (*foundIt != light) {
+		return;
+	}
+
+	_pointLights.erase(foundIt);
+	_pointLightAllocator.destroy(light);
+	_pointLightAllocator.deallocate(light);
 }
 
 void Model::removeBatch(Batch* batch)

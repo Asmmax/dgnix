@@ -1,10 +1,10 @@
-#include "objects/Light.hpp"
+#include "objects/PointLight.hpp"
 #include "DrawState.hpp"
 #include <string>
 
-int Light::MAX_LIGHT_COUNT = 10;
+int PointLight::MAX_LIGHT_COUNT = 10;
 
-Light::LightNames::LightNames(int id):
+PointLight::LightNames::LightNames(int id):
 	_id(id),
 	_colorName(("PointLights[" + std::to_string(id) + "].Color").c_str()),
 	_intensityName(("PointLights[" + std::to_string(id) + "].Intensity").c_str()),
@@ -13,18 +13,18 @@ Light::LightNames::LightNames(int id):
 {
 }
 
-std::vector<StringId>& Light::LightNames::getLightPosNames()
+std::vector<StringId>& PointLight::LightNames::getLightPosNames()
 {
 	static std::vector<StringId> lightPosNames = initLightPosNames();
 	return lightPosNames;
 }
 
-std::vector<StringId> Light::LightNames::initLightPosNames()
+std::vector<StringId> PointLight::LightNames::initLightPosNames()
 {
 	std::vector<StringId> lightPosNames;
 	static const std::string nameTemplate = "PointLights";
 
-	for (int i = 0; i < Light::MAX_LIGHT_COUNT; i++) {
+	for (int i = 0; i < PointLight::MAX_LIGHT_COUNT; i++) {
 		std::string name(nameTemplate);
 		name += "[" + std::to_string(i) + "]";
 		lightPosNames.emplace_back((name + ".Position").c_str());
@@ -36,7 +36,7 @@ std::vector<StringId> Light::LightNames::initLightPosNames()
 
 
 
-Light::Light():
+PointLight::PointLight():
 	_position(),
 	_color(1.0f, 1.0f, 1.0f),
 	_intensity(1.0f),
@@ -45,32 +45,32 @@ Light::Light():
 {
 }
 
-void Light::setColor(const glm::vec3& color)
+void PointLight::setColor(const glm::vec3& color)
 {
 	_color = color;
 }
 
-void Light::setIntensity(float intensity)
+void PointLight::setIntensity(float intensity)
 {
 	_intensity = intensity;
 }
 
-void Light::setRadius(float radius)
+void PointLight::setRadius(float radius)
 {
 	_radius = radius;
 }
 
-void Light::setFadingArea(float fadingArea)
+void PointLight::setFadingArea(float fadingArea)
 {
 	_fadingArea = fadingArea;
 }
 
-void Light::setPosition(const glm::vec3& position)
+void PointLight::setPosition(const glm::vec3& position)
 {
 	_position = position;
 }
 
-void Light::predraw(DrawStatePoolDef& statePool)
+void PointLight::predraw(DrawStatePoolDef& statePool)
 {
 	auto& state = statePool.get();
 
@@ -97,7 +97,7 @@ void Light::predraw(DrawStatePoolDef& statePool)
 	state.addOrSet(pointLightCountName, id + 1);
 }
 
-int Light::nextFreeId(const DrawStateDef& state)
+int PointLight::nextFreeId(const DrawStateDef& state)
 {
 	for (int i = 0; i < MAX_LIGHT_COUNT; i++) {
 

@@ -4,18 +4,21 @@
 #include <vector>
 #include <glm/mat4x4.hpp>
 
-class Light;
+class DirectLight;
+class PointLight;
 class Object;
 class Batch;
 
 class Model
 {
 private:
-	std::vector<Light*> _lights;
+	std::vector<DirectLight*> _directLights;
+	std::vector<PointLight*> _pointLights;
 	std::vector<Batch*> _batches;
 	DrawStateDef _state;
 
-	PoolAllocator<Light> _lightAllocator;
+	PoolAllocator<DirectLight> _directLightAllocator;
+	PoolAllocator<PointLight> _pointLightAllocator;
 	PoolAllocator<Batch> _batchAllocator;
 
 public:
@@ -33,9 +36,11 @@ public:
 	DrawStateDef& getState() { return _state; }
 	const DrawStateDef& getState() const { return _state; }
 	
-	Light* createLight();
+	DirectLight* createDirectLight();
+	PointLight* createPointLight();
 	Batch* createBatch();
 
-	void removeLight(Light* light);
+	void removeDirectLight(DirectLight* light);
+	void removePointLight(PointLight* light);
 	void removeBatch(Batch* batch);
 };
