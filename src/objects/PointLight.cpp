@@ -74,10 +74,6 @@ void PointLight::predraw(DrawStatePoolDef& statePool)
 {
 	auto& state = statePool.get();
 
-	static const StringId viewMatrixName = StringId("ViewMatrix");
-	const auto& viewMatrix = state.get<glm::mat4>(viewMatrixName);
-	const glm::vec4 viewPosition = viewMatrix * glm::vec4(_position, 1.0f);
-
 	const int id = nextFreeId(state);
 	if (id < 0) {
 		return;
@@ -87,7 +83,7 @@ void PointLight::predraw(DrawStatePoolDef& statePool)
 		_names = std::make_unique<LightNames>(id);
 	}
 
-	state.add(LightNames::getLightPosNames()[id], viewPosition);
+	state.add(LightNames::getLightPosNames()[id], glm::vec3(_position));
 	state.add(_names->getColorName(), _color);
 	state.add(_names->getIntensityName(), _intensity);
 	state.add(_names->getRadiusName(), _radius);

@@ -44,8 +44,11 @@ void Object::draw(Shader* shader, const glm::mat4& viewMatrix, const glm::mat4& 
 	const auto mvMatrix = viewMatrix * _matrix;
 	const auto mvpMatrix = projMatrix * mvMatrix;
 
-	const auto normalMatrix4x4 = glm::transpose(glm::inverse(mvMatrix));
-	const glm::mat3 normalMatrix(normalMatrix4x4);
+	const glm::mat3 modelMatrix3x3 = _matrix;
+	const auto normalMatrix = glm::transpose(glm::inverse(modelMatrix3x3));
+
+	const glm::mat3 viewMatrix3x3 = viewMatrix;
+	const glm::vec3 viewOrigin = -glm::inverse(viewMatrix3x3) * viewMatrix[3];
 
 	static const StringId modelMatrixName = StringId("ModelMatrix");
 	const auto modelMatrixLocation = shader->getLocation(modelMatrixName);
@@ -69,6 +72,12 @@ void Object::draw(Shader* shader, const glm::mat4& viewMatrix, const glm::mat4& 
 	const auto normalMatrixLocation = shader->getLocation(normalMatrixName);
 	if (normalMatrixLocation != static_cast<unsigned int>(-1)) {
 		shader->setUniform(normalMatrixLocation, normalMatrix);
+	}
+
+	static const StringId viewOriginName = StringId("ViewOrigin");
+	const auto viewOriginLocation = shader->getLocation(viewOriginName);
+	if (viewOriginLocation != static_cast<unsigned int>(-1)) {
+		shader->setUniform(viewOriginLocation, viewOrigin);
 	}
 
 	_mesh->draw();
