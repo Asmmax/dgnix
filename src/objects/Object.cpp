@@ -80,5 +80,7 @@ void Object::draw(Shader* shader, const glm::mat4& viewMatrix, const glm::mat4& 
 		shader->setUniform(viewOriginLocation, viewOrigin);
 	}
 
+	_state.apply(*shader);
+
 	_mesh->draw();
 }

@@ -231,6 +231,40 @@ bool DrawState<Types...>::has(const StringId& name, const UnorderedMap<StringId,
 
 
 template<typename... Types>
+bool DrawState<Types...>::isEmpty() const
+{
+	return !isNotEmpty(_maps, std::index_sequence_for<Types...>());
+}
+
+template<typename... Types>
+template<std::size_t... Is>
+bool DrawState<Types...>::isNotEmpty(const std::tuple<UnorderedMap<StringId, Types>...>& tuple, std::index_sequence<Is...>) const
+{
+	return isNotEmpty(std::get<Is>(tuple)...);
+}
+
+template<typename... Types>
+template<typename CurrentType, typename... Remains>
+bool DrawState<Types...>::isNotEmpty(const UnorderedMap<StringId, CurrentType>& currentMap, const UnorderedMap<StringId, Remains>&... remains) const
+{
+	if (!currentMap.isEmpty()) {
+		return true;
+	}
+	return isNotEmpty(remains...);
+}
+
+template<typename... Types>
+template<typename LastType>
+bool DrawState<Types...>::isNotEmpty(const UnorderedMap<StringId, LastType>& lastMap) const
+{
+	if (!lastMap.isEmpty()) {
+		return true;
+	}
+	return _parentState && !_parentState->isEmpty();
+}
+
+
+template<typename... Types>
 void DrawState<Types...>::apply(Shader& shader) const
 {
 	if (_parentState) {
@@ -296,7 +330,7 @@ template<typename Type>
 void DrawState<Types...>::apply(DrawState& otherState, const UnorderedMap<StringId, Type>& map)
 {
 	for (size_t i = 0; i < map.size(); i++) {
-		otherState.add(map.keys()[i], map.values()[i]);
+		otherState.addOrSet(map.keys()[i], map.values()[i]);
 	}
 }
 

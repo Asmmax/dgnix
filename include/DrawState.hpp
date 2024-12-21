@@ -33,6 +33,7 @@ public:
 	void clear();
 
 	bool has(const StringId& name) const;
+	bool isEmpty() const;
 
 	void apply(Shader& shader) const;
 	void apply(DrawState& otherState) const;
@@ -106,6 +107,16 @@ private:
 
 	template<typename LastType>
 	bool has(const StringId& name, const UnorderedMap<StringId, LastType>& lastMap) const;
+
+
+	template<std::size_t... Is>
+	bool isNotEmpty(const std::tuple<UnorderedMap<StringId, Types>...>& tuple, std::index_sequence<Is...>) const;
+
+	template<typename CurrentType, typename... Remains>
+	bool isNotEmpty(const UnorderedMap<StringId, CurrentType>& currentMap, const UnorderedMap<StringId, Remains>&... remains) const;
+
+	template<typename LastType>
+	bool isNotEmpty(const UnorderedMap<StringId, LastType>& lastMap) const;
 
 
 	template<std::size_t... Is>

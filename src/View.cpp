@@ -71,7 +71,16 @@ void View::render(const Model* model, const glm::mat4& viewMatrix, const glm::ma
 	_statePool.push();
 
 	if (model) {
-		model->predraw(_statePool, viewMatrix, projMatrix);
+		const glm::mat4 viewProjMat = projMatrix * viewMatrix;
+
+		auto& currentState = _statePool.get();
+		static const StringId viewMatrixName = StringId("ViewMatrix");
+		currentState.add(viewMatrixName, viewMatrix);
+		static const StringId projMatrixName = StringId("ProjectionMatrix");
+		currentState.add(projMatrixName, projMatrix);
+		static const StringId viewProjMatrixName = StringId("ViewProjectionMatrix");
+		currentState.add(viewProjMatrixName, viewProjMat);
+
 		model->draw(_statePool);
 	}
 

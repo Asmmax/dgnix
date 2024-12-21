@@ -45,5 +45,5 @@ public:
 	void removeObject(Object* object);
 	void clear();
 
-	void draw(DrawStatePoolDef& statePool);
+	void draw(const DrawStateDef& state);
 };

@@ -135,13 +135,11 @@ void Batch::clear()
 	_objects.clear();
 }
 
-void Batch::draw(DrawStatePoolDef& statePool)
+void Batch::draw(const DrawStateDef& state)
 {
 	if (_objects.empty()) {
 		return;
 	}
-
-	const auto& state = statePool.get();
 
 	static const StringId viewProjMatrixName = StringId("ViewProjectionMatrix");
 	const auto& viewProjMatrix = state.get<glm::mat4>(viewProjMatrixName);
@@ -158,6 +156,7 @@ void Batch::draw(DrawStatePoolDef& statePool)
 		return;
 	}
 
+	assert(_shader);
 	_shader->use();
 
 	state.apply(*_shader);
