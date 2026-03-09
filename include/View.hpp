@@ -38,6 +38,8 @@ public:
 	void renderImgui();
 	void endRender();
 	void setSize(int width, int height);
+	int getWidth() const { return _width; }
+	int getHeight() const { return _height; }
 
 	void copyBuffer(BufferId dstId, int dstWidth, int dstHeight);
 
