@@ -166,6 +166,7 @@ void Batch::render(RenderQueue& renderQueue, const glm::mat4& viewProjMatrix)
 	}
 
 	if (_dirtyMaterialData) {
+		_material.getMaterialData().clear();
 		_state.fill(_material.getMaterialData());
 		_dirtyMaterialData = false;
 	}

@@ -9,6 +9,11 @@
 #include <glm/glm.hpp>
 #include <glm/ext/matrix_clip_space.hpp>
 
+static const StringId VIEW_MATRIX_NAME("ViewMatrix");
+static const StringId PROJ_MATRIX_NAME("ProjectionMatrix");
+static const StringId VIEW_PROJ_MATRIX_NAME("ViewProjectionMatrix");
+static const StringId VIEW_ORIGIN_NAME("ViewOrigin");
+
 View::View(IViewImpl* viewImpl, Texture* fboTexture):
 	_impl(viewImpl),
 	_context(nullptr),
@@ -71,19 +76,15 @@ void View::render(const Model* model, const glm::mat4& viewMatrix, const glm::ma
 	if (model) {
 		RenderData frameData;
 
-		static const StringId viewMatrixName = StringId("ViewMatrix");
-		frameData.setMat4(viewMatrixName, viewMatrix);
-		static const StringId projMatrixName = StringId("ProjectionMatrix");
-		frameData.setMat4(projMatrixName, projMatrix);
+		frameData.setMat4(VIEW_MATRIX_NAME, viewMatrix);
+		frameData.setMat4(PROJ_MATRIX_NAME, projMatrix);
 
 		const glm::mat3 viewMatrix3x3 = viewMatrix;
 		const glm::vec3 viewOrigin = -glm::inverse(viewMatrix3x3) * viewMatrix[3];
-		static const StringId viewOriginName = StringId("ViewOrigin");
-		frameData.setVec3(viewOriginName, viewOrigin);
+		frameData.setVec3(VIEW_ORIGIN_NAME, viewOrigin);
 
 		const glm::mat4 viewProjMat = projMatrix * viewMatrix;
-		static const StringId viewProjMatrixName = StringId("ViewProjectionMatrix");
-		frameData.setMat4(viewProjMatrixName, viewProjMat);
+		frameData.setMat4(VIEW_PROJ_MATRIX_NAME, viewProjMat);
 
 		model->getState().fill(frameData);
 

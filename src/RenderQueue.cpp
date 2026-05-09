@@ -5,6 +5,13 @@
 #include "resources/Shader.hpp"
 #include "resources/Mesh.hpp"
 
+static const StringId VIEW_MATRIX_NAME("ViewMatrix");
+static const StringId PROJ_MATRIX_NAME("ProjectionMatrix");
+static const StringId MODEL_MATRIX_NAME("ModelMatrix");
+static const StringId MV_MATRIX_NAME("ModelViewMatrix");
+static const StringId MVP_MATRIX_NAME("MVP");
+static const StringId NORMAL_MATRIX_NAME("NormalMatrix");
+
 void RenderQueue::submit(const RenderCommand& command)
 {
 	_commands.push_back(command);
@@ -23,35 +30,22 @@ void RenderQueue::sort()
 	});
 }
 
-static RenderData computeModelMatrixData(const RenderData& frameData, const glm::mat4& matrix)
+static void fillModelMatrixData(RenderData& modelMatrixData, const RenderData& frameData, const glm::mat4& matrix)
 {
-	static const StringId viewMatrixName = StringId("ViewMatrix");
-	const auto& viewMatrix = frameData.getMat4(viewMatrixName);
+	modelMatrixData.setMat4(MODEL_MATRIX_NAME, matrix);
 
-	static const StringId projMatrixName = StringId("ProjectionMatrix");
-	const auto& projMatrix = frameData.getMat4(projMatrixName);
+	const auto& viewMatrix = frameData.getMat4(VIEW_MATRIX_NAME);
+	const auto& projMatrix = frameData.getMat4(PROJ_MATRIX_NAME);
 
 	const auto mvMatrix = viewMatrix * matrix;
+	modelMatrixData.setMat4(MV_MATRIX_NAME, mvMatrix);
+
 	const auto mvpMatrix = projMatrix * mvMatrix;
+	modelMatrixData.setMat4(MVP_MATRIX_NAME, mvpMatrix);
 
 	const glm::mat3 modelMatrix3x3 = matrix;
 	const auto normalMatrix = glm::transpose(glm::inverse(modelMatrix3x3));
-
-	RenderData result;
-
-	static const StringId modelMatrixName = StringId("ModelMatrix");
-	result.setMat4(modelMatrixName, matrix);
-
-	static const StringId mvMatrixName = StringId("ModelViewMatrix");
-	result.setMat4(mvMatrixName, mvMatrix);
-
-	static const StringId mvpMatrixName = StringId("MVP");
-	result.setMat4(mvpMatrixName, mvpMatrix);
-
-	static const StringId normalMatrixName = StringId("NormalMatrix");
-	result.setMat3(normalMatrixName, normalMatrix);
-
-	return result;
+	modelMatrixData.setMat3(NORMAL_MATRIX_NAME, normalMatrix);
 }
 
 void RenderQueue::execute(const RenderData& frameData) const
@@ -62,6 +56,7 @@ void RenderQueue::execute(const RenderData& frameData) const
 
 	Shader* currentShader = nullptr;
 	const Material* currentMaterial = nullptr;
+	RenderData matrixModelData;
 
 	for (const RenderCommand& command : _commands) {
 		bool shaderChanged = command.shader != currentShader;
@@ -95,7 +90,9 @@ void RenderQueue::execute(const RenderData& frameData) const
 
 		command.objectData.apply(*currentShader);
 
-		computeModelMatrixData(frameData, command.modelMatrix).apply(*currentShader);
+		matrixModelData.clear();
+		fillModelMatrixData(matrixModelData, frameData, command.modelMatrix);
+		matrixModelData.apply(*currentShader);
 
 		command.mesh->draw();
 	}

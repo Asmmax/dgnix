@@ -125,3 +125,13 @@ void RenderData::apply(Shader& shader) const
 		}
 	}
 }
+
+void RenderData::clear()
+{
+	_intValues.clear();
+	_floatValues.clear();
+	_vec3Values.clear();
+	_vec4Values.clear();
+	_mat3Values.clear();
+	_mat4Values.clear();
+}
