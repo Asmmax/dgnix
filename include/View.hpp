@@ -16,10 +16,15 @@ private:
 	IViewImpl* _impl;
 	IGraphicsContext* _context;
 	Texture* _fboTexture;
+	glm::mat4 _projMatrix;
 	int _width;
 	int _height;
+	float _fovy;
+	float _nearDist;
+	float _farDist;
 
 	bool _isResized;
+	bool _isProjChanged;
 	bool _isRendering;
 
 public:
@@ -33,11 +38,12 @@ public:
 
 	void init(IGraphicsContext* context);
 	void beginRender(const glm::vec3& background = glm::vec3());
-	void render(const Model* model, const glm::mat4& viewMatrix, const glm::mat4& projMatrix, bool isBackground = false);
+	void render(const Model* model, const glm::mat4& viewMatrix, bool isBackground = false);
 	void setupImgui();
 	void renderImgui();
 	void endRender();
 	void setSize(int width, int height);
+	void setFrustum(float fovy, float nearDist, float farDist);
 	int getWidth() const { return _width; }
 	int getHeight() const { return _height; }
 
@@ -47,4 +53,5 @@ public:
 
 private:
 	void resizeBuffer();
+	void updateProjMatrix();
 };
