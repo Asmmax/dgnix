@@ -76,6 +76,11 @@ void View::render(const Model* model, const glm::mat4& viewMatrix, const glm::ma
 		static const StringId projMatrixName = StringId("ProjectionMatrix");
 		frameData.setMat4(projMatrixName, projMatrix);
 
+		const glm::mat3 viewMatrix3x3 = viewMatrix;
+		const glm::vec3 viewOrigin = -glm::inverse(viewMatrix3x3) * viewMatrix[3];
+		static const StringId viewOriginName = StringId("ViewOrigin");
+		frameData.setVec3(viewOriginName, viewOrigin);
+
 		const glm::mat4 viewProjMat = projMatrix * viewMatrix;
 		static const StringId viewProjMatrixName = StringId("ViewProjectionMatrix");
 		frameData.setMat4(viewProjMatrixName, viewProjMat);

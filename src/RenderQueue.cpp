@@ -37,9 +37,6 @@ static RenderData computeModelMatrixData(const RenderData& frameData, const glm:
 	const glm::mat3 modelMatrix3x3 = matrix;
 	const auto normalMatrix = glm::transpose(glm::inverse(modelMatrix3x3));
 
-	const glm::mat3 viewMatrix3x3 = viewMatrix;
-	const glm::vec3 viewOrigin = -glm::inverse(viewMatrix3x3) * viewMatrix[3];
-
 	RenderData result;
 
 	static const StringId modelMatrixName = StringId("ModelMatrix");
@@ -53,9 +50,6 @@ static RenderData computeModelMatrixData(const RenderData& frameData, const glm:
 
 	static const StringId normalMatrixName = StringId("NormalMatrix");
 	result.setMat3(normalMatrixName, normalMatrix);
-
-	static const StringId viewOriginName = StringId("ViewOrigin");
-	result.setVec3(viewOriginName, viewOrigin);
 
 	return result;
 }
