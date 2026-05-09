@@ -1,4 +1,5 @@
 #include "Model.hpp"
+#include "RenderQueue.hpp"
 #include "objects/Batch.hpp"
 #include <algorithm>
 
@@ -15,13 +16,10 @@ Model::~Model()
 	}
 }
 
-void Model::draw(DrawStatePoolDef& statePool) const
+void Model::render(RenderQueue& renderQueue, const glm::mat4& viewProjMatrix) const
 {
-	_state.apply(statePool.get());
 	for (Batch* batch : _batches) {
-		statePool.push();
-		batch->draw(statePool.get());
-		statePool.pop();
+		batch->render(renderQueue, viewProjMatrix);
 	}
 }
 

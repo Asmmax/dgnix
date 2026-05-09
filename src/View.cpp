@@ -1,6 +1,7 @@
 #include "View.hpp"
 #include "Model.hpp"
 #include "DrawState.hpp"
+#include "RenderData.hpp"
 #include "IGraphicsContext.hpp"
 #include "IViewImpl.hpp"
 #include "resources/Texture.hpp"
@@ -14,7 +15,6 @@ View::View(IViewImpl* viewImpl, Texture* fboTexture):
 	_fboTexture(fboTexture),
 	_width(fboTexture ? fboTexture->getWidth() : 0),
 	_height(fboTexture ? fboTexture->getHeight() : 0),
-	_statePool(10),
 	_isResized(false),
 	_isRendering(false)
 {
@@ -68,23 +68,26 @@ void View::render(const Model* model, const glm::mat4& viewMatrix, const glm::ma
 		return;
 	}
 
-	_statePool.push();
-
 	if (model) {
-		const glm::mat4 viewProjMat = projMatrix * viewMatrix;
+		RenderData frameData;
 
-		auto& currentState = _statePool.get();
 		static const StringId viewMatrixName = StringId("ViewMatrix");
-		currentState.add(viewMatrixName, viewMatrix);
+		frameData.setMat4(viewMatrixName, viewMatrix);
 		static const StringId projMatrixName = StringId("ProjectionMatrix");
-		currentState.add(projMatrixName, projMatrix);
+		frameData.setMat4(projMatrixName, projMatrix);
+
+		const glm::mat4 viewProjMat = projMatrix * viewMatrix;
 		static const StringId viewProjMatrixName = StringId("ViewProjectionMatrix");
-		currentState.add(viewProjMatrixName, viewProjMat);
+		frameData.setMat4(viewProjMatrixName, viewProjMat);
 
-		model->draw(_statePool);
+		model->getState().fill(frameData);
+
+		model->render(_renderQueue, viewProjMat);
+
+		_renderQueue.sort();
+		_renderQueue.execute(frameData);
+		_renderQueue.clear();
 	}
-
-	_statePool.pop();
 
 	if (isBackground) {
 		_context->clearDepth();

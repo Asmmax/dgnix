@@ -1,4 +1,5 @@
 #pragma once
+#include "Material.hpp"
 #include "DrawState.hpp"
 #include "PoolAllocator.hpp"
 #include <vector>
@@ -6,6 +7,7 @@
 class Shader;
 class Texture;
 class Object;
+class RenderQueue;
 
 class Batch
 {
@@ -16,6 +18,8 @@ private:
 	std::vector<Object*> _objects;
 	std::vector<Object*> _hiddenObjects;
 	std::vector<Object*> _culledObjects;
+	Material _material;
+	bool _dirtyMaterialData = false;
 
 	PoolAllocator<Object> _objectAllocator;
 
@@ -28,7 +32,7 @@ public:
 	Batch& operator=(const Batch& other) = delete;
 	Batch& operator=(Batch&& other) = delete;
 
-	DrawStateDef& getState() { return _state; }
+	DrawStateDef& getState();
 	const DrawStateDef& getState() const { return _state; }
 
 	void setShader(Shader* shader);
@@ -45,5 +49,5 @@ public:
 	void removeObject(Object* object);
 	void clear();
 
-	void draw(const DrawStateDef& state);
+	void render(RenderQueue& renderQueue, const glm::mat4& viewProjMatrix);
 };

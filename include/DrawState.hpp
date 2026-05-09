@@ -1,4 +1,5 @@
 #pragma once
+#include "RenderData.hpp"
 #include "UnorderedMap.hpp"
 #include "StringId.hpp"
 #include "glm/glm.hpp"
@@ -37,6 +38,8 @@ public:
 
 	void apply(Shader& shader) const;
 	void apply(DrawState& otherState) const;
+
+	void fill(RenderData& renderData) const;
 
 private:
 	template<typename Type, std::size_t... Is>
@@ -137,6 +140,20 @@ private:
 
 	template<typename Type>
 	static void apply(DrawState& otherState, const UnorderedMap<StringId, Type>& map);
+
+
+	template<std::size_t... Is>
+	static void fill(RenderData& renderData, const std::tuple<UnorderedMap<StringId, Types>...>& tuple, std::index_sequence<Is...>);
+
+	template<typename CurrentType, typename... Remains>
+	static void fill(RenderData& renderData, const UnorderedMap<StringId, CurrentType>& currentMap, const UnorderedMap<StringId, Remains>&... remains);
+
+	static void fill(RenderData& renderData, const UnorderedMap<StringId, int>& map);
+	static void fill(RenderData& renderData, const UnorderedMap<StringId, float>& map);
+	static void fill(RenderData& renderData, const UnorderedMap<StringId, glm::vec3>& map);
+	static void fill(RenderData& renderData, const UnorderedMap<StringId, glm::vec4>& map);
+	static void fill(RenderData& renderData, const UnorderedMap<StringId, glm::mat3>& map);
+	static void fill(RenderData& renderData, const UnorderedMap<StringId, glm::mat4>& map);
 };
 
 

@@ -335,6 +335,79 @@ void DrawState<Types...>::apply(DrawState& otherState, const UnorderedMap<String
 }
 
 
+template<typename... Types>
+void DrawState<Types...>::fill(RenderData& renderData) const
+{
+	if (_parentState) {
+		_parentState->fill(renderData);
+	}
+	fill(renderData, _maps, std::index_sequence_for<Types...>());
+}
+
+template<typename... Types>
+template<std::size_t... Is>
+void DrawState<Types...>::fill(RenderData& renderData, const std::tuple<UnorderedMap<StringId, Types>...>& tuple, std::index_sequence<Is...>)
+{
+	fill(renderData, std::get<Is>(tuple)...);
+}
+
+template<typename... Types>
+template<typename CurrentType, typename... Remains>
+void DrawState<Types...>::fill(RenderData& renderData, const UnorderedMap<StringId, CurrentType>& currentMap, const UnorderedMap<StringId, Remains>&... remains)
+{
+	fill(renderData, currentMap);
+	fill(renderData, remains...);
+}
+
+template<typename... Types>
+void DrawState<Types...>::fill(RenderData& renderData, const UnorderedMap<StringId, int>& map)
+{
+	for (size_t i = 0; i < map.size(); i++) {
+		renderData.setInt(map.keys()[i], map.values()[i]);
+	}
+}
+
+template<typename... Types>
+void DrawState<Types...>::fill(RenderData& renderData, const UnorderedMap<StringId, float>& map)
+{
+	for (size_t i = 0; i < map.size(); i++) {
+		renderData.setFloat(map.keys()[i], map.values()[i]);
+	}
+}
+
+template<typename... Types>
+void DrawState<Types...>::fill(RenderData& renderData, const UnorderedMap<StringId, glm::vec3>& map)
+{
+	for (size_t i = 0; i < map.size(); i++) {
+		renderData.setVec3(map.keys()[i], map.values()[i]);
+	}
+}
+
+template<typename... Types>
+void DrawState<Types...>::fill(RenderData& renderData, const UnorderedMap<StringId, glm::vec4>& map)
+{
+	for (size_t i = 0; i < map.size(); i++) {
+		renderData.setVec4(map.keys()[i], map.values()[i]);
+	}
+}
+
+template<typename... Types>
+void DrawState<Types...>::fill(RenderData& renderData, const UnorderedMap<StringId, glm::mat3>& map)
+{
+	for (size_t i = 0; i < map.size(); i++) {
+		renderData.setMat3(map.keys()[i], map.values()[i]);
+	}
+}
+
+template<typename... Types>
+void DrawState<Types...>::fill(RenderData& renderData, const UnorderedMap<StringId, glm::mat4>& map)
+{
+	for (size_t i = 0; i < map.size(); i++) {
+		renderData.setMat4(map.keys()[i], map.values()[i]);
+	}
+}
+
+
 
 
 template<typename... Types>

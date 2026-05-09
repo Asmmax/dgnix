@@ -1,4 +1,6 @@
 #include "objects/Object.hpp"
+
+#include "RenderQueue.hpp"
 #include "resources/Mesh.hpp"
 #include "StringId.hpp"
 #include "resources/Shader.hpp"
@@ -35,52 +37,20 @@ bool Object::isCaughtIntoView(const glm::mat4& viewProjMatrix) const
 	return projectedBbox.isOverlapped(screenBbox, 1e-4f);
 }
 
-void Object::draw(Shader* shader, const glm::mat4& viewMatrix, const glm::mat4& projMatrix)
+void Object::render(RenderQueue& renderQueue, Shader* shader, const Material* material)
 {
 	if (!_mesh) {
 		return;
 	}
 
-	const auto mvMatrix = viewMatrix * _matrix;
-	const auto mvpMatrix = projMatrix * mvMatrix;
+	RenderCommand cmd{};
 
-	const glm::mat3 modelMatrix3x3 = _matrix;
-	const auto normalMatrix = glm::transpose(glm::inverse(modelMatrix3x3));
+	cmd.shader = shader;
+	cmd.material = material;
+	cmd.mesh = _mesh;
+	cmd.modelMatrix = _matrix;
 
-	const glm::mat3 viewMatrix3x3 = viewMatrix;
-	const glm::vec3 viewOrigin = -glm::inverse(viewMatrix3x3) * viewMatrix[3];
+	_state.fill(cmd.objectData);
 
-	static const StringId modelMatrixName = StringId("ModelMatrix");
-	const auto modelMatrixLocation = shader->getLocation(modelMatrixName);
-	if (modelMatrixLocation != static_cast<unsigned int>(-1)) {
-		shader->setUniform(modelMatrixLocation, _matrix);
-	}
-
-	static const StringId mvMatrixName = StringId("ModelViewMatrix");
-	const auto mvMatrixLocation = shader->getLocation(mvMatrixName);
-	if (mvMatrixLocation != static_cast<unsigned int>(-1)) {
-		shader->setUniform(mvMatrixLocation, mvMatrix);
-	}
-
-	static const StringId mvpMatrixName = StringId("MVP");
-	const auto mvpMatrixLocation = shader->getLocation(mvpMatrixName);
-	if (mvpMatrixLocation != static_cast<unsigned int>(-1)) {
-		shader->setUniform(mvpMatrixLocation, mvpMatrix);
-	}
-
-	static const StringId normalMatrixName = StringId("NormalMatrix");
-	const auto normalMatrixLocation = shader->getLocation(normalMatrixName);
-	if (normalMatrixLocation != static_cast<unsigned int>(-1)) {
-		shader->setUniform(normalMatrixLocation, normalMatrix);
-	}
-
-	static const StringId viewOriginName = StringId("ViewOrigin");
-	const auto viewOriginLocation = shader->getLocation(viewOriginName);
-	if (viewOriginLocation != static_cast<unsigned int>(-1)) {
-		shader->setUniform(viewOriginLocation, viewOrigin);
-	}
-
-	_state.apply(*shader);
-
-	_mesh->draw();
+	renderQueue.submit(cmd);
 }

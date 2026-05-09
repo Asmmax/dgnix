@@ -1,4 +1,7 @@
 #include "objects/Batch.hpp"
+
+#include "RenderQueue.hpp"
+#include "Material.hpp"
 #include "objects/Object.hpp"
 #include "resources/Shader.hpp"
 #include "resources/Texture.hpp"
@@ -16,6 +19,12 @@ Batch::~Batch()
 	for (auto& object : _objects) {
 		_objectAllocator.destroy(object);
 	}
+}
+
+DrawStateDef& Batch::getState()
+{
+	_dirtyMaterialData = true;
+	return _state;
 }
 
 void Batch::setShader(Shader* shader)
@@ -41,6 +50,7 @@ void Batch::addTexture(const StringId& name, Texture* texture)
 	assert(!hasTexture(name));
 
 	_textures.emplace_back(name, texture);
+	_material.setTexture(name, texture);
 }
 
 void Batch::setTexture(const StringId& name, Texture* texture)
@@ -55,6 +65,7 @@ void Batch::setTexture(const StringId& name, Texture* texture)
 		});
 
 	it->second = texture;
+	_material.setTexture(name, texture);
 }
 
 void Batch::removeTexture(const StringId& name)
@@ -64,6 +75,7 @@ void Batch::removeTexture(const StringId& name)
 		return texturePair.first == name;
 		});
 	_textures.erase(it);
+	_material.removeTexture(name);
 }
 
 Object* Batch::createObject()
@@ -135,14 +147,11 @@ void Batch::clear()
 	_objects.clear();
 }
 
-void Batch::draw(const DrawStateDef& state)
+void Batch::render(RenderQueue& renderQueue, const glm::mat4& viewProjMatrix)
 {
 	if (_objects.empty()) {
 		return;
 	}
-
-	static const StringId viewProjMatrixName = StringId("ViewProjectionMatrix");
-	const auto& viewProjMatrix = state.get<glm::mat4>(viewProjMatrixName);
 
 	_culledObjects.clear();
 	for (Object* object : _objects)
@@ -156,35 +165,13 @@ void Batch::draw(const DrawStateDef& state)
 		return;
 	}
 
-	assert(_shader);
-	_shader->use();
-
-	state.apply(*_shader);
-
-	int textureUnit = 0;
-	for (auto& texture : _textures) {
-		const auto location = _shader->getLocation(texture.first);
-		if (location == static_cast<unsigned int>(-1)) {
-			continue;
-		}
-
-		texture.second->apply(textureUnit);
-		_shader->setUniform(location, textureUnit);
-		textureUnit++;
+	if (_dirtyMaterialData) {
+		_state.fill(_material.getMaterialData());
+		_dirtyMaterialData = false;
 	}
-
-	_state.apply(*_shader);
-
-	static const StringId viewMatrixName = StringId("ViewMatrix");
-	const auto& viewMatrix = state.get<glm::mat4>(viewMatrixName);
-
-	static const StringId projMatrixName = StringId("ProjectionMatrix");
-	const auto& projMatrix = state.get<glm::mat4>(projMatrixName);
 
 	for (Object* object : _culledObjects)
 	{
-		object->draw(_shader, viewMatrix, projMatrix);
+		object->render(renderQueue, _shader, &_material);
 	}
-
-	_shader->clear();
 }

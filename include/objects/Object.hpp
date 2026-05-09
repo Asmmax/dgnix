@@ -4,6 +4,8 @@
 
 class Mesh;
 class Shader;
+class RenderQueue;
+class Material;
 
 class Object
 {
@@ -24,5 +26,5 @@ public:
 	const DrawStateDef& getState() const { return _state; }
 
 	bool isCaughtIntoView(const glm::mat4& viewProjMatrix) const;
-	void draw(Shader* shader, const glm::mat4& viewMatrix, const glm::mat4& projMatrix);
+	void render(RenderQueue& renderQueue, Shader* shader, const Material* material);
 };

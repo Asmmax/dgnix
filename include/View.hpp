@@ -1,5 +1,5 @@
 #pragma once
-#include "DrawState.hpp"
+#include "RenderQueue.hpp"
 #include "BufferId.hpp"
 #include <glm/vec3.hpp>
 #include <glm/mat4x4.hpp>
@@ -12,12 +12,12 @@ class Texture;
 class View
 {
 private:
+	RenderQueue _renderQueue;
 	IViewImpl* _impl;
 	IGraphicsContext* _context;
 	Texture* _fboTexture;
 	int _width;
 	int _height;
-	DrawStatePoolDef _statePool;
 
 	bool _isResized;
 	bool _isRendering;

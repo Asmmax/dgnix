@@ -6,6 +6,7 @@
 
 class Object;
 class Batch;
+class RenderQueue;
 
 class Model
 {
@@ -24,7 +25,7 @@ public:
 	Model& operator=(const Model& other) = delete;
 	Model& operator=(Model&& other) = delete;
 
-	void draw(DrawStatePoolDef& statePool) const;
+	void render(RenderQueue& renderQueue, const glm::mat4& viewProjMatrix) const;
 
 	DrawStateDef& getState() { return _state; }
 	const DrawStateDef& getState() const { return _state; }
