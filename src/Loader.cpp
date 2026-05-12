@@ -12,12 +12,14 @@ Loader::Loader(ILoaderImpl* loaderImpl, size_t poolSize /*= 100*/):
 	_context(nullptr),
 	_meshAllocator(poolSize),
 	_textureAllocator(poolSize),
-	_shaderAllocator(poolSize)
+	_shaderAllocator(poolSize),
+	_materialAllocator(poolSize)
 {
 	//Allocate memory for vectors in advance
 	_meshes.reserve(poolSize);
 	_textures.reserve(poolSize);
 	_shaders.reserve(poolSize);
+	_materials.reserve(poolSize);
 }
 
 Loader::~Loader()
@@ -37,6 +39,10 @@ Loader::~Loader()
 
 	for (auto shaderPtr : _shaders) {
 		_shaderAllocator.destroy(shaderPtr);
+	}
+
+	for (auto materialPtr : _materials) {
+		_materialAllocator.destroy(materialPtr);
 	}
 
 	delete _impl;
@@ -114,6 +120,14 @@ Shader* Loader::loadShader(const std::string& vertexShader, const std::string& f
 	return newShader;
 }
 
+Material* Loader::createMaterial()
+{
+	Material* newMaterial = _materialAllocator.allocate();
+	_materialAllocator.construct(newMaterial);
+	_materials.push_back(newMaterial);
+	return newMaterial;
+}
+
 void Loader::release(Mesh* mesh)
 {
 	if (!mesh) {
@@ -175,4 +189,20 @@ void Loader::release(Shader* shader)
 	_shaderAllocator.destroy(shader);
 	_shaderAllocator.deallocate(shader);
 	_shaders.erase(foundIt);
+}
+
+void Loader::release(Material* material)
+{
+	if (!material) {
+		return;
+	}
+
+	const auto foundIt = std::find(_materials.begin(), _materials.end(), material);
+	if (foundIt == _materials.end()) {
+		return;
+	}
+
+	_materialAllocator.destroy(material);
+	_materialAllocator.deallocate(material);
+	_materials.erase(foundIt);
 }

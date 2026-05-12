@@ -2,6 +2,7 @@
 #include "resources/Mesh.hpp"
 #include "resources/Texture.hpp"
 #include "resources/Shader.hpp"
+#include "Material.hpp"
 #include "PoolAllocator.hpp"
 #include <vector>
 #include <string>
@@ -21,10 +22,12 @@ private:
 	std::vector<Mesh*> _meshes;
 	std::vector<Texture*> _textures;
 	std::vector<Shader*> _shaders;
+	std::vector<Material*> _materials;
 
 	PoolAllocator<Mesh> _meshAllocator;
 	PoolAllocator<Texture> _textureAllocator;
 	PoolAllocator<Shader> _shaderAllocator;
+	PoolAllocator<Material> _materialAllocator;
 
 public:
 	explicit Loader(ILoaderImpl* loaderImpl, size_t poolSize = 100);
@@ -41,8 +44,10 @@ public:
 	Texture* loadTexture(const TextureData& data);
 	Texture* createTexture(int width, int height);
 	Shader* loadShader(const std::string& vertexShader, const std::string& fragmentShader);
+	Material* createMaterial();
 
 	void release(Mesh* mesh);
 	void release(Texture* texture);
 	void release(Shader* shader);
+	void release(Material* material);
 };
