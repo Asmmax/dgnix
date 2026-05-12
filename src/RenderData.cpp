@@ -129,22 +129,22 @@ void RenderData::apply(Shader& shader) const
 void RenderData::override(const RenderData& other)
 {
 	for (size_t i = 0; i < other._intValues.size(); i++) {
-		setInt(_intValues.keys()[i], _intValues.values()[i]);
+		setInt(other._intValues.keys()[i], other._intValues.values()[i]);
 	}
 	for (size_t i = 0; i < other._floatValues.size(); i++) {
-		setFloat(_floatValues.keys()[i], _floatValues.values()[i]);
+		setFloat(other._floatValues.keys()[i], other._floatValues.values()[i]);
 	}
 	for (size_t i = 0; i < other._vec3Values.size(); i++) {
-		setVec3(_vec3Values.keys()[i], _vec3Values.values()[i]);
+		setVec3(other._vec3Values.keys()[i], other._vec3Values.values()[i]);
 	}
 	for (size_t i = 0; i < other._vec4Values.size(); i++) {
-		setVec4(_vec4Values.keys()[i], _vec4Values.values()[i]);
+		setVec4(other._vec4Values.keys()[i], other._vec4Values.values()[i]);
 	}
 	for (size_t i = 0; i < other._mat3Values.size(); i++) {
-		setMat3(_mat3Values.keys()[i], _mat3Values.values()[i]);
+		setMat3(other._mat3Values.keys()[i], other._mat3Values.values()[i]);
 	}
 	for (size_t i = 0; i < other._mat4Values.size(); i++) {
-		setMat4(_mat4Values.keys()[i], _mat4Values.values()[i]);
+		setMat4(other._mat4Values.keys()[i], other._mat4Values.values()[i]);
 	}
 }
 

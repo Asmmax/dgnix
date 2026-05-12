@@ -131,7 +131,7 @@ void View::render(const RenderQueue& renderQueue, const RenderData& modelData, c
 
 	frameData.override(modelData);
 
-	_renderQueue.execute(frameData);
+	renderQueue.execute(frameData);
 
 	if (isBackground) {
 		_context->clearDepth();
