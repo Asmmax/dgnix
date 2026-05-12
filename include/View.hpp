@@ -39,6 +39,7 @@ public:
 	void init(IGraphicsContext* context);
 	void beginRender(const glm::vec3& background = glm::vec3());
 	void render(const Model* model, const glm::mat4& viewMatrix, bool isBackground = false);
+	void render(const RenderQueue& renderQueue, const RenderData& modelData, const glm::mat4& viewMatrix, bool isBackground = false);
 	void setupImgui();
 	void renderImgui();
 	void endRender();

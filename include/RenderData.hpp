@@ -32,5 +32,6 @@ public:
 	const glm::mat4& getMat4(StringId name) const;
 
 	void apply(Shader& shader) const;
+	void override(const RenderData& other);
 	void clear();
 };

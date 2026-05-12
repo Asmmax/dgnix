@@ -106,6 +106,38 @@ void View::render(const Model* model, const glm::mat4& viewMatrix, bool isBackgr
 	}
 }
 
+void View::render(const RenderQueue& renderQueue, const RenderData& modelData, const glm::mat4& viewMatrix, bool isBackground)
+{
+	assert(_isRendering);
+	if (_width == 0 || _height == 0) {
+		return;
+	}
+
+	if (!_context) {
+		return;
+	}
+
+	RenderData frameData;
+
+	frameData.setMat4(VIEW_MATRIX_NAME, viewMatrix);
+	frameData.setMat4(PROJ_MATRIX_NAME, _projMatrix);
+
+	const glm::mat3 viewMatrix3x3 = viewMatrix;
+	const glm::vec3 viewOrigin = -glm::inverse(viewMatrix3x3) * viewMatrix[3];
+	frameData.setVec3(VIEW_ORIGIN_NAME, viewOrigin);
+
+	const glm::mat4 viewProjMat = _projMatrix * viewMatrix;
+	frameData.setMat4(VIEW_PROJ_MATRIX_NAME, viewProjMat);
+
+	frameData.override(modelData);
+
+	_renderQueue.execute(frameData);
+
+	if (isBackground) {
+		_context->clearDepth();
+	}
+}
+
 void View::setupImgui()
 {
 	assert(_isRendering);
